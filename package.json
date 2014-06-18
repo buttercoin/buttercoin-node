@@ -1,0 +1,32 @@
+{
+  "name": "node-buttercoin",
+  "version": "0.0.1",
+  "description": "Official Buttercoin API lib for node.js",
+  "author": "Kevin Adams <kevin@buttercoin.com>",
+  "license": "MIT",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "nodeunit tests/tests.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/buttercoin/node-buttercoin.git"
+  },
+  "keywords": [
+    "bitcoin",
+    "buttercoin",
+    "trading platform",
+    "cryptocurrency",
+    "digital currency",
+    "btc"
+  ],
+  "dependencies": {
+    "request": "~2.36.0"
+  },
+  "devDependencies": {
+    "nodeunit": "*"
+  }
+}
