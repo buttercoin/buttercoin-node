@@ -2,7 +2,14 @@
   "name": "node-buttercoin",
   "version": "0.0.1",
   "description": "Official Buttercoin API lib for node.js",
-  "author": "Kevin Adams <kevin@buttercoin.com>",
+  "homepage": "https://github.com/buttercoin/node-buttercoin",
+  "author": {
+    "name": "Kevin Adams",
+    "email": "kevin@buttercoin.com"
+  },
+  "bugs": {
+    "url": "https://github.com/buttercoin/node-buttercoin/issues"
+  },
   "license": "MIT",
   "main": "index.js",
   "directories": {
