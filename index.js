@@ -12,18 +12,18 @@ function Buttercoin (api_key, api_secret, api_url, version) {
   this.apiUrl = api_url || "https://api.buttercoin.com"
 };
 
-var buildUrl = function (endpoint) {
-  return this.apiUrl + "/" + version + "/" + endpoint;
+Buttercoin.prototype.buildUrl = function (endpoint) {
+  return this.apiUrl + "/" + this.version + "/" + endpoint;
 }
 
-var signUrl = function (urlString, timestamp) {
+Buttercoin.prototype.signUrl = function (urlString, timestamp) {
   var urlString = timestamp + urlString 
   var hmac = crypto.createHmac('sha256', this.apiSecret).update(urlString).digest('base64');
   signedHash = new Buffer(hmac, 'base64').toString('utf8');
   return signedHash;
 };
 
-var getHeaders = function (signature, timestamp) {
+Buttercoin.prototype.getHeaders = function (signature, timestamp) {
   var headers = {
     'X-Buttercoin-Access-Key': this.apiKey,
     'X-Buttercoin-Signature': signature,
@@ -33,14 +33,14 @@ var getHeaders = function (signature, timestamp) {
 };
 
 Buttercoin.prototype.getKey = function (timestamp, callback) {
-  var url = buildUrl('key');
-  var signature = signUrl(url, timestamp);
+  var url = this.buildUrl('key');
+  var signature = this.signUrl(url, timestamp);
 
   request.get({
     url: url,
     json: true,
     strictSSL: true,
-    headers: getHeaders(signature, timestamp)
+    headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
     if (err) {
       callback(err);
@@ -55,14 +55,14 @@ Buttercoin.prototype.getKey = function (timestamp, callback) {
 };
 
 Buttercoin.prototype.getAccount = function (timestamp, callback) {
-  var url = buildUrl('account');
-  var signature = signUrl(url, timestamp);
+  var url = this.buildUrl('account');
+  var signature = this.signUrl(url, timestamp);
 
   request.get({
     url: url,
     json: true,
     strictSSL: true,
-    headers: getHeaders(signature, timestamp)
+    headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
     if (err) {
       callback(err);
@@ -77,14 +77,14 @@ Buttercoin.prototype.getAccount = function (timestamp, callback) {
 };
 
 Buttercoin.prototype.getBalances = function (timestamp, callback) {
-  var url = buildUrl('account/balances');
-  var signature = signUrl(url, timestamp);
+  var url = this.buildUrl('account/balances');
+  var signature = this.signUrl(url, timestamp);
 
   request.get({
     url: url,
     json: true,
     strictSSL: true,
-    headers: getHeaders(signature, timestamp)
+    headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
     if (err) {
       callback(err);
@@ -99,14 +99,14 @@ Buttercoin.prototype.getBalances = function (timestamp, callback) {
 };
 
 Buttercoin.prototype.getDepositAddress = function (timestamp, callback) {
-  var url = buildUrl('account/depositAddress');
-  var signature = signUrl(url, timestamp);
+  var url = this.buildUrl('account/depositAddress');
+  var signature = this.signUrl(url, timestamp);
 
   request.get({
     url: url,
     json: true,
     strictSSL: true,
-    headers: getHeaders(signature, timestamp)
+    headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
     if (err) {
       callback(err);
@@ -121,15 +121,15 @@ Buttercoin.prototype.getDepositAddress = function (timestamp, callback) {
 };
 
 Buttercoin.prototype.getOrders = function (queryParams, timestamp, callback) {
-  var url = buildUrl('orders');
-  var signature = signUrl(url, timestamp);
+  var url = this.buildUrl('orders');
+  var signature = this.signUrl(url, timestamp);
 
   request.get({
     url: url,
     qs: queryParams,
     json: true,
     strictSSL: true,
-    headers: getHeaders(signature, timestamp)
+    headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
     if (err) {
       callback(err);
@@ -144,14 +144,14 @@ Buttercoin.prototype.getOrders = function (queryParams, timestamp, callback) {
 };
 
 Buttercoin.prototype.getOrder = function (orderId, timestamp, callback) {
-  var url = buildUrl('orders/' + orderId);
-  var signature = signUrl(url, timestamp);
+  var url = this.buildUrl('orders/' + orderId);
+  var signature = this.signUrl(url, timestamp);
 
   request.get({
     url: url,
     json: true,
     strictSSL: true,
-    headers: getHeaders(signature, timestamp)
+    headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
     if (err) {
       callback(err);
@@ -166,14 +166,14 @@ Buttercoin.prototype.getOrder = function (orderId, timestamp, callback) {
 };
 
 Buttercoin.prototype.cancelOrder = function (orderId, timestamp, callback) {
-  var url = buildUrl('orders/' + orderId);
-  var signature = signUrl(url, timestamp);
+  var url = this.buildUrl('orders/' + orderId);
+  var signature = this.signUrl(url, timestamp);
 
   request.del({
     url: url,
     json: true,
     strictSSL: true,
-    headers: getHeaders(signature, timestamp)
+    headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
     if (err) {
       callback(err);
@@ -188,15 +188,15 @@ Buttercoin.prototype.cancelOrder = function (orderId, timestamp, callback) {
 };
 
 Buttercoin.prototype.createOrder = function (params, timestamp, callback) {
-  var url = buildUrl('orders');
-  var signature = signUrl(url, timestamp);
+  var url = this.buildUrl('orders');
+  var signature = this.signUrl(url, timestamp);
 
   request.post({
     url: url,
     body: JSON.stringify(params),
     json: true,
     strictSSL: true,
-    headers: getHeaders(signature, timestamp)
+    headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
     if (err) {
       callback(err);
@@ -211,15 +211,15 @@ Buttercoin.prototype.createOrder = function (params, timestamp, callback) {
 };
 
 Buttercoin.prototype.getTransactions = function (queryParams, timestamp, callback) {
-  var url = buildUrl('transactions');
-  var signature = signUrl(url, timestamp);
+  var url = this.buildUrl('transactions');
+  var signature = this.signUrl(url, timestamp);
 
   request.get({
     url: url,
     qs: queryParams,
     json: true,
     strictSSL: true,
-    headers: getHeaders(signature, timestamp)
+    headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
     if (err) {
       callback(err);
@@ -234,14 +234,14 @@ Buttercoin.prototype.getTransactions = function (queryParams, timestamp, callbac
 };
 
 Buttercoin.prototype.getTransaction = function (trxnId, timestamp, callback) {
-  var url = buildUrl('transactions/' + trxnId);
-  var signature = signUrl(url, timestamp);
+  var url = this.buildUrl('transactions/' + trxnId);
+  var signature = this.signUrl(url, timestamp);
 
   request.get({
     url: url,
     json: true,
     strictSSL: true,
-    headers: getHeaders(signature, timestamp)
+    headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
     if (err) {
       callback(err);
@@ -256,14 +256,14 @@ Buttercoin.prototype.getTransaction = function (trxnId, timestamp, callback) {
 };
 
 Buttercoin.prototype.cancelTransaction = function (orderId, timestamp, callback) {
-  var url = buildUrl('transactions/' + trxnId);
-  var signature = signUrl(url, timestamp);
+  var url = this.buildUrl('transactions/' + trxnId);
+  var signature = this.signUrl(url, timestamp);
 
   request.del({
     url: url,
     json: true,
     strictSSL: true,
-    headers: getHeaders(signature, timestamp)
+    headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
     if (err) {
       callback(err);
@@ -278,15 +278,15 @@ Buttercoin.prototype.cancelTransaction = function (orderId, timestamp, callback)
 };
 
 Buttercoin.prototype.createDeposit = function (params, timestamp, callback) {
-  var url = buildUrl('transactions/deposit');
-  var signature = signUrl(url, timestamp);
+  var url = this.buildUrl('transactions/deposit');
+  var signature = this.signUrl(url, timestamp);
 
   request.post({
     url: url,
     body: JSON.stringify(params),
     json: true,
     strictSSL: true,
-    headers: getHeaders(signature, timestamp)
+    headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
     if (err) {
       callback(err);
@@ -301,15 +301,15 @@ Buttercoin.prototype.createDeposit = function (params, timestamp, callback) {
 };
 
 Buttercoin.prototype.createWithdrawal = function (params, timestamp, callback) {
-  var url = buildUrl('transactions/withdrawal');
-  var signature = signUrl(url, timestamp);
+  var url = this.buildUrl('transactions/withdrawal');
+  var signature = this.signUrl(url, timestamp);
 
   request.post({
     url: url,
     body: JSON.stringify(params),
     json: true,
     strictSSL: true,
-    headers: getHeaders(signature, timestamp)
+    headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
     if (err) {
       callback(err);
@@ -326,15 +326,15 @@ Buttercoin.prototype.createWithdrawal = function (params, timestamp, callback) {
 };
 
 Buttercoin.prototype.send = function (params, timestamp, callback) {
-  var url = buildUrl('transactions/send');
-  var signature = signUrl(url, timestamp);
+  var url = this.buildUrl('transactions/send');
+  var signature = this.signUrl(url, timestamp);
 
   request.post({
     url: url,
     body: JSON.stringify(params),
     json: true,
     strictSSL: true,
-    headers: getHeaders(signature, timestamp)
+    headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
     if (err) {
       callback(err);
@@ -351,14 +351,14 @@ Buttercoin.prototype.send = function (params, timestamp, callback) {
 };
 
 Buttercoin.prototype.getOrderbook = function (timestamp, callback) {
-  var url = buildUrl('orderbook');
-  var signature = signUrl(url, timestamp);
+  var url = this.buildUrl('orderbook');
+  var signature = this.signUrl(url, timestamp);
 
   request.get({
     url: url,
     json: true,
     strictSSL: true,
-    headers: getHeaders(signature, timestamp)
+    headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
     if (err) {
       callback(err);
@@ -373,14 +373,14 @@ Buttercoin.prototype.getOrderbook = function (timestamp, callback) {
 };
 
 Buttercoin.prototype.getTicker = function (timestamp, callback) {
-  var url = buildUrl('ticker');
-  var signature = signUrl(url, timestamp);
+  var url = this.buildUrl('ticker');
+  var signature = this.signUrl(url, timestamp);
 
   request.get({
     url: url,
     json: true,
     strictSSL: true,
-    headers: getHeaders(signature, timestamp)
+    headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
     if (err) {
       callback(err);
