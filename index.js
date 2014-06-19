@@ -1,5 +1,6 @@
 var request = require('request');
 var crypto = require('crypto');
+var qs = require('qs');
 
 var UNEXPECTED_RESPONSE = 'Unexpected response format.  You might be using the wrong version of the API, or Buttercoin might be MESSING up.';
 
@@ -109,7 +110,8 @@ Buttercoin.prototype.getDepositAddress = function (timestamp, callback) {
 
 Buttercoin.prototype.getOrders = function (queryParams, timestamp, callback) {
   var url = this.buildUrl('orders');
-  var signature = this.signUrl(url, timestamp);
+  var paramString = (queryParams === {}) ? '' : "?" + qs.stringify(queryParams);
+  var signature = this.signUrl(url + paramString, timestamp);
 
   request.get({
     url: url,
@@ -179,7 +181,7 @@ Buttercoin.prototype.cancelOrder = function (orderId, timestamp, callback) {
 
 Buttercoin.prototype.createOrder = function (params, timestamp, callback) {
   var url = this.buildUrl('orders');
-  var signature = this.signUrl(url, timestamp);
+  var signature = this.signUrl(url + JSON.stringify(params), timestamp);
 
   request.post({
     url: url,
@@ -201,7 +203,8 @@ Buttercoin.prototype.createOrder = function (params, timestamp, callback) {
 
 Buttercoin.prototype.getTransactions = function (queryParams, timestamp, callback) {
   var url = this.buildUrl('transactions');
-  var signature = this.signUrl(url, timestamp);
+  var paramString = (queryParams === {}) ? '' : "?" + qs.stringify(queryParams);
+  var signature = this.signUrl(url + paramString, timestamp);
 
   request.get({
     url: url,
@@ -271,7 +274,7 @@ Buttercoin.prototype.cancelTransaction = function (trxnId, timestamp, callback) 
 
 Buttercoin.prototype.createDeposit = function (params, timestamp, callback) {
   var url = this.buildUrl('transactions/deposit');
-  var signature = this.signUrl(url, timestamp);
+  var signature = this.signUrl(url + JSON.stringify(params), timestamp);
 
   request.post({
     url: url,
@@ -294,7 +297,7 @@ Buttercoin.prototype.createDeposit = function (params, timestamp, callback) {
 
 Buttercoin.prototype.createWithdrawal = function (params, timestamp, callback) {
   var url = this.buildUrl('transactions/withdrawal');
-  var signature = this.signUrl(url, timestamp);
+  var signature = this.signUrl(url + JSON.stringify(params), timestamp);
 
   request.post({
     url: url,
@@ -319,7 +322,7 @@ Buttercoin.prototype.createWithdrawal = function (params, timestamp, callback) {
 
 Buttercoin.prototype.send = function (params, timestamp, callback) {
   var url = this.buildUrl('transactions/send');
-  var signature = this.signUrl(url, timestamp);
+  var signature = this.signUrl(url + JSON.stringify(params), timestamp);
 
   request.post({
     url: url,

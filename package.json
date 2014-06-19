@@ -31,7 +31,8 @@
     "btc"
   ],
   "dependencies": {
-    "request": "~2.36.0"
+    "request": "~2.36.0",
+    "qs": "~0.6.6"
   },
   "devDependencies": {
     "nodeunit": "*"
