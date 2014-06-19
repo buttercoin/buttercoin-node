@@ -1,15 +1,18 @@
 var request = require('request');
 var crypto = require('crypto');
 
-module.exports = function (api_key, api_secret, api_url, version) {
+module.exports = function (api_key, api_secret, mode, version) {
+  var api_url = 'http://api.qa.dcxft.com';
+  if (mode && mode === 'production')
+    api_url = 'http://api.buttercoin.com';
   return new Buttercoin(api_key, api_secret, api_url, version);
 };
 
 function Buttercoin (api_key, api_secret, api_url, version) {
   this.apiKey = api_key;
   this.apiSecret = api_secret;
-  this.version = version || "v1"
-  this.apiUrl = api_url || "https://api.buttercoin.com"
+  this.version = version || "v1" // default to latest version
+  this.apiUrl = api_url || "https://api.buttercoin.com" // default to production
 };
 
 Buttercoin.prototype.buildUrl = function (endpoint) {
@@ -17,9 +20,8 @@ Buttercoin.prototype.buildUrl = function (endpoint) {
 }
 
 Buttercoin.prototype.signUrl = function (urlString, timestamp) {
-  var urlString = timestamp + urlString 
-  var hmac = crypto.createHmac('sha256', this.apiSecret).update(urlString).digest('base64');
-  signedHash = new Buffer(hmac, 'base64').toString('utf8');
+  urlString = new Buffer(timestamp + urlString, 'UTF-8').toString('base64');
+  var signedHash = crypto.createHmac('sha256', this.apiSecret).update(urlString).digest('base64');
   return signedHash;
 };
 
@@ -51,28 +53,6 @@ Buttercoin.prototype.getKey = function (timestamp, callback) {
         callback(body);
       }
     }
-  });
-};
-
-Buttercoin.prototype.getAccount = function (timestamp, callback) {
-  var url = this.buildUrl('account');
-  var signature = this.signUrl(url, timestamp);
-
-  request.get({
-    url: url,
-    json: true,
-    strictSSL: true,
-    headers: this.getHeaders(signature, timestamp)
-  }, function (err, res, body) {
-    if (err) {
-      callback(err);
-    } else {
-      if (res.statusCode === 200) {
-        callback(null, body);
-      } else {
-        callback(body);
-      }
-    } 
   });
 };
 
@@ -193,8 +173,7 @@ Buttercoin.prototype.createOrder = function (params, timestamp, callback) {
 
   request.post({
     url: url,
-    body: JSON.stringify(params),
-    json: true,
+    json: params,
     strictSSL: true,
     headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
@@ -255,7 +234,7 @@ Buttercoin.prototype.getTransaction = function (trxnId, timestamp, callback) {
   });
 };
 
-Buttercoin.prototype.cancelTransaction = function (orderId, timestamp, callback) {
+Buttercoin.prototype.cancelTransaction = function (trxnId, timestamp, callback) {
   var url = this.buildUrl('transactions/' + trxnId);
   var signature = this.signUrl(url, timestamp);
 
@@ -393,9 +372,3 @@ Buttercoin.prototype.getTicker = function (timestamp, callback) {
     } 
   });
 };
-
-
-
-
-
-
