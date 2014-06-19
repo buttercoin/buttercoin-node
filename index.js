@@ -1,6 +1,8 @@
 var request = require('request');
 var crypto = require('crypto');
 
+var UNEXPECTED_RESPONSE = 'Unexpected response format.  You might be using the wrong version of the API, or Buttercoin might be MESSING up.';
+
 module.exports = function (api_key, api_secret, mode, version) {
   var api_url = 'http://api.qa.dcxft.com';
   if (mode && mode === 'production')
@@ -11,8 +13,8 @@ module.exports = function (api_key, api_secret, mode, version) {
 function Buttercoin (api_key, api_secret, api_url, version) {
   this.apiKey = api_key;
   this.apiSecret = api_secret;
-  this.version = version || "v1" // default to latest version
-  this.apiUrl = api_url || "https://api.buttercoin.com" // default to production
+  this.version = version || "v1" // default to latest API version as of this Client release
+  this.apiUrl = api_url
 };
 
 Buttercoin.prototype.buildUrl = function (endpoint) {
@@ -21,8 +23,7 @@ Buttercoin.prototype.buildUrl = function (endpoint) {
 
 Buttercoin.prototype.signUrl = function (urlString, timestamp) {
   urlString = new Buffer(timestamp + urlString, 'UTF-8').toString('base64');
-  var signedHash = crypto.createHmac('sha256', this.apiSecret).update(urlString).digest('base64');
-  return signedHash;
+  return signedHash = crypto.createHmac('sha256', this.apiSecret).update(urlString).digest('base64');
 };
 
 Buttercoin.prototype.getHeaders = function (signature, timestamp) {
@@ -48,7 +49,10 @@ Buttercoin.prototype.getKey = function (timestamp, callback) {
       callback(err);
     } else {
       if (res.statusCode === 200) {
-        callback(null, body);
+        if (body.permissions)
+          callback(null, body.permissions);
+        else
+	  callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
       } else {
         callback(body);
       }
@@ -92,7 +96,10 @@ Buttercoin.prototype.getDepositAddress = function (timestamp, callback) {
       callback(err);
     } else {
       if (res.statusCode === 200) {
-        callback(null, body);
+        if (body.address)
+          callback(null, body.address);
+        else
+	  callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
       } else {
         callback(body);
       }
@@ -115,7 +122,10 @@ Buttercoin.prototype.getOrders = function (queryParams, timestamp, callback) {
       callback(err);
     } else {
       if (res.statusCode === 200) {
-        callback(null, body);
+        if (body.results)
+          callback(null, body.results);
+        else
+	  callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
       } else {
         callback(body);
       }
@@ -204,7 +214,10 @@ Buttercoin.prototype.getTransactions = function (queryParams, timestamp, callbac
       callback(err);
     } else {
       if (res.statusCode === 200) {
-        callback(null, body);
+        if (body.results)
+          callback(null, body.results);
+        else
+	  callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
       } else {
         callback(body);
       }
@@ -343,7 +356,10 @@ Buttercoin.prototype.getOrderbook = function (timestamp, callback) {
       callback(err);
     } else {
       if (res.statusCode === 200) {
-        callback(null, body);
+        if (body.market)
+          callback(null, body.market);
+        else
+	  callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
       } else {
         callback(body);
       }
