@@ -278,8 +278,7 @@ Buttercoin.prototype.createDeposit = function (params, timestamp, callback) {
 
   request.post({
     url: url,
-    body: JSON.stringify(params),
-    json: true,
+    json: params,
     strictSSL: true,
     headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
@@ -301,8 +300,7 @@ Buttercoin.prototype.createWithdrawal = function (params, timestamp, callback) {
 
   request.post({
     url: url,
-    body: JSON.stringify(params),
-    json: true,
+    json: params,
     strictSSL: true,
     headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
@@ -326,8 +324,7 @@ Buttercoin.prototype.send = function (params, timestamp, callback) {
 
   request.post({
     url: url,
-    body: JSON.stringify(params),
-    json: true,
+    json: params,
     strictSSL: true,
     headers: this.getHeaders(signature, timestamp)
   }, function (err, res, body) {
