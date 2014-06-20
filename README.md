@@ -39,7 +39,7 @@ var timestamp = new Date().getTime();
 
 ### Get Data
 
-**Key Permissions**
+**Key Permissions**  
 Returns `array` of permissions associated with this key
 
 ```javascript
@@ -49,7 +49,7 @@ buttercoin.getKey(new Date().getTime(), function (err, key) {
 });
 ```
 
-**Deposit Address**
+**Deposit Address**  
 Returns bitcoin address `string` to deposit your funds into the Buttercoin platform
 
 ```javascript
@@ -59,18 +59,17 @@ buttercoin.getDepositAddress(new Date().getTime(), function (err, address) {
 });
 ```
 
-**Get Orders**
+**Get Orders**  
 Returns `array` of `JSON Objects` containing information about buy and sell orders
 
-Valid params include:
-
-`status` - enum: `['open', 'reopened', 'filled', 'canceled']`
-`dateMin` - format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`
-`dateMax` - format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`
-`orderAction` - enum: `['buy', 'sell']`
-`orderType` - enum: `['market', 'limit']`
-`page` - number of page requested, `integer`
-`pageSize` - size of page requested, `integer`
+Valid params include:  
+`status` - enum: `['open', 'reopened', 'filled', 'canceled']`  
+`dateMin` - format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
+`dateMax` - format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
+`orderAction` - enum: `['buy', 'sell']`  
+`orderType` - enum: `['market', 'limit']`  
+`page` - number of page requested, `integer`  
+`pageSize` - size of page requested, `integer`  
 
 ```javascript
 // query for multiple orders
@@ -90,16 +89,16 @@ buttercoin.getOrder(orderId, new Date().getTime(), function (err, orders) {
 });
 ```
 
-**Get Transaction**
+**Get Transaction**  
 Returns `array` of `JSON Objects` containing information about deposit and withdraw action
 
-Valid params include:
-`status` - enum: `['pending', 'processing', 'funded', 'canceled', 'failed']`
-`dateMin`  - format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`
-`dateMax` - format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`
-`transactionType` - enum: `['deposit', 'withdrawal']`
-`page` - number of page requested, `integer`
-`pageSize` - size of page requested, `integer`
+Valid params include:  
+`status` - enum: `['pending', 'processing', 'funded', 'canceled', 'failed']`  
+`dateMin`  - format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
+`dateMax` - format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
+`transactionType` - enum: `['deposit', 'withdrawal']`  
+`page` - number of page requested, `integer`  
+`pageSize` - size of page requested, `integer`  
 
 ```javascript
 // query for multiple transactions
@@ -118,7 +117,7 @@ buttercoin.getTransaction(trxnId, new Date().getTime(), function (err, transacti
 });
 ```
 
-**Get Order Book**
+**Get Order Book**  
 Return an `array` of current orders in the Buttercoin order book
 
 ```javascript
@@ -128,7 +127,7 @@ buttercoin.getOrderbook(new Date().getTime(), function (err, orderBook) {
 });
 ```
 
-**Get Ticker**
+**Get Ticker**  
 Return the current bid, ask, and last sell prices on the Buttercoin platform
 
 ```javascript
@@ -140,14 +139,14 @@ buttercoin.getTicker(new Date().getTime(), function (err, orderBook) {
 
 ### Create New Actions
 
-**Create Order**
+**Create Order**  
 
-Valid order params include:
-`orderAction` - enum: `['buy', 'sell']`, required `true`
-`orderType` - enum: `['limit', 'market']`, required `true`
-`price` - e.g. `{ amount: 100.11, currency: 'USD' }`, required `false`
-`quantity` - e.g. `{ amount: 100.11, currency: 'BTC' }`, required `false`
-`offered` - e.g. `{ amount: 100.11, currency: 'USD' }`, required `false`
+Valid order params include:  
+`orderAction` - enum: `['buy', 'sell']`, required `true`  
+`orderType` - enum: `['limit', 'market']`, required `true`  
+`price` - e.g. `{ amount: 100.11, currency: 'USD' }`, required `false`  
+`quantity` - e.g. `{ amount: 100.11, currency: 'BTC' }`, required `false`  
+`offered` - e.g. `{ amount: 100.11, currency: 'USD' }`, required `false`  
 `received` - enum: `['BTC']`, required `false`
 
 ```javascript
@@ -171,12 +170,12 @@ buttercoin.createOrder(order, new Date().getTime(), function (err, order) {
 });
 ```
 
-**Create Transaction**
+**Create Transaction**  
 
-Deposit transaction params include:
-`method` - enum: `['wire']`, required `true`
-`currency` - enum: `['USD']`, required `true`
-`amount` - `float`, required true
+Deposit transaction params include:  
+`method` - enum: `['wire']`, required `true`  
+`currency` - enum: `['USD']`, required `true`  
+`amount` - `float`, required true  
 
 ```javascript
 // create deposit
@@ -192,10 +191,10 @@ buttercoin.createDeposit(trxnObj, new Date().getTime(), function (err, trxn) {
 });
 ```
 
-Withdrawal transaction params include:
-`method` - enum: `['wire']`, required `true`
-`currency` - enum: `['USD']`, required `true`
-`amount` - `float`, required true
+Withdrawal transaction params include:  
+`method` - enum: `['wire']`, required `true`  
+`currency` - enum: `['USD']`, required `true`  
+`amount` - `float`, required true  
 
 ```javascript
 // create withdrawal
@@ -210,10 +209,10 @@ buttercoin.createWithdrawal(trxnObj, new Date().getTime(), function (err, trxn) 
   console.log("create trxn", trxn);
 });
 ```
-Send bitcoin transaction params include:
-`method` - enum: `['wire']`, required `true`
-`currency` - enum: `['USD']`, required `true`
-`destination` - address to which to send currency `string`, required true
+Send bitcoin transaction params include:  
+`method` - enum: `['wire']`, required `true`  
+`currency` - enum: `['USD']`, required `true`  
+`destination` - address to which to send currency `string`, required true  
 
 ```javascript
 // send bitcoins to an address
@@ -234,7 +233,7 @@ buttercoin.send(trxnObj, new Date().getTime(), function (err, trxn) {
 
 All successful cancel calls to the API return a response status of `204` with a human readable success message
 
-**Cancel Order**
+**Cancel Order**  
 Cancel a pending buy or sell order
 
 ```javascript
@@ -244,7 +243,7 @@ buttercoin.cancelOrder(orderId, new Date().getTime(), function (err, msg) {
 });
 ```
 
-**Cancel Transaction**
+**Cancel Transaction**  
 Cancel a pending deposit or withdraw action
 
 ```javascript
