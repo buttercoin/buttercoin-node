@@ -171,7 +171,7 @@ Buttercoin.prototype.cancelOrder = function (orderId, timestamp, callback) {
       callback(err);
     } else {
       if (res.statusCode === 204) {
-        callback(null, { status: 'Order canceled successfully' });
+        callback(null, { status: 204, message: 'Order canceled successfully' });
       } else {
         callback(body);
       }
@@ -193,7 +193,7 @@ Buttercoin.prototype.createOrder = function (params, timestamp, callback) {
       callback(err);
     } else {
       if (res.statusCode === 202) {
-        callback(null, { order: res.headers.location });
+        callback(null, { status: 202, order: res.headers.location });
       } else {
         callback(body);
       }
@@ -264,7 +264,7 @@ Buttercoin.prototype.cancelTransaction = function (trxnId, timestamp, callback) 
       callback(err);
     } else {
       if (res.statusCode === 204) {
-        callback(null, { status: 'Order canceled successfully' });
+        callback(null, { status: 204, message: 'Order canceled successfully' });
       } else {
         callback(body);
       }
@@ -286,7 +286,7 @@ Buttercoin.prototype.createDeposit = function (params, timestamp, callback) {
       callback(err);
     } else {
       if (res.statusCode === 202) {
-        callback(null, { transaction: res.headers.location });
+        callback(null, { status: 202, transaction: res.headers.location });
       } else {
         callback(body);
       }
@@ -308,9 +308,9 @@ Buttercoin.prototype.createWithdrawal = function (params, timestamp, callback) {
       callback(err);
     } else {
       if (res.statusCode === 201) {
-        callback(null, { status: 'Withdraw request created, but email confirmation is required' });
+        callback(null, { status: 201, message: 'Withdraw request created, but email confirmation is required' });
       } else if (res.statusCode === 202) {
-        callback(null, { transaction: res.headers.location });
+        callback(null, { status: 202, transaction: res.headers.location });
       } else {
         callback(body);
       }
