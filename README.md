@@ -255,7 +255,7 @@ buttercoin.cancelTransaction(trxnId, new Date().getTime(), function (err, msg) {
 
 ## Further Reading
 
-[Buttercoin - Website](https://www.buttercoin.com)
+[Buttercoin - Website](https://www.buttercoin.com)  
 [Buttercoin API Docs](https://www.buttercoin.com/#/api-docs)
 
 ## Contributing
