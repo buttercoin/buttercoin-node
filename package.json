@@ -16,7 +16,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "nodeunit tests/tests.js"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",

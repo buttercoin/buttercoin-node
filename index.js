@@ -5,6 +5,12 @@ var qs = require('qs');
 var UNEXPECTED_RESPONSE = 'Unexpected response format.  You might be using the wrong version of the API, or Buttercoin might be MESSING up.';
 
 module.exports = function (api_key, api_secret, mode, version) {
+  if (!api_key || api_key.length !== 32)
+    throw new Error('API Key parameter must be specified and be of length 32 characters');
+
+  if (!api_secret || api_secret.length !== 32)
+    throw new Error('API Secret parameter must be specified and be of length 32 characters');
+
   var api_url = 'http://api.qa.dcxft.com';
   if (mode && mode === 'production')
     api_url = 'http://api.buttercoin.com';
@@ -24,7 +30,8 @@ Buttercoin.prototype.buildUrl = function (endpoint) {
 
 Buttercoin.prototype.signUrl = function (urlString, timestamp) {
   urlString = new Buffer(timestamp + urlString, 'UTF-8').toString('base64');
-  return signedHash = crypto.createHmac('sha256', this.apiSecret).update(urlString).digest('base64');
+  var signedHash = crypto.createHmac('sha256', this.apiSecret).update(urlString).digest('base64');
+  return signedHash;
 };
 
 Buttercoin.prototype.getHeaders = function (signature, timestamp) {
