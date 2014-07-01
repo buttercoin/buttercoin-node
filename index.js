@@ -11,9 +11,9 @@ module.exports = function (api_key, api_secret, mode, version) {
   if (!api_secret || api_secret.length !== 32)
     throw new Error('API Secret parameter must be specified and be of length 32 characters');
 
-  var api_url = 'http://api.qa.dcxft.com';
+  var api_url = 'https://api.qa.dcxft.com';
   if (mode && mode === 'production')
-    api_url = 'http://api.buttercoin.com';
+    api_url = 'https://api.buttercoin.com';
   return new Buttercoin(api_key, api_secret, api_url, version);
 };
 
@@ -117,7 +117,7 @@ Buttercoin.prototype.getDepositAddress = function (timestamp, callback) {
 
 Buttercoin.prototype.getOrders = function (queryParams, timestamp, callback) {
   var url = this.buildUrl('orders');
-  var paramString = (queryParams === {}) ? '' : "?" + qs.stringify(queryParams);
+  var paramString = (queryParams && queryParams.length != 0) ? '' : "?" + qs.stringify(queryParams);
   var signature = this.signUrl(url + paramString, timestamp);
 
   request.get({
@@ -210,7 +210,7 @@ Buttercoin.prototype.createOrder = function (params, timestamp, callback) {
 
 Buttercoin.prototype.getTransactions = function (queryParams, timestamp, callback) {
   var url = this.buildUrl('transactions');
-  var paramString = (queryParams === {}) ? '' : "?" + qs.stringify(queryParams);
+  var paramString = (queryParams && queryParams.length != 0) ? '' : "?" + qs.stringify(queryParams);
   var signature = this.signUrl(url + paramString, timestamp);
 
   request.get({
@@ -271,7 +271,7 @@ Buttercoin.prototype.cancelTransaction = function (trxnId, timestamp, callback) 
       callback(err);
     } else {
       if (res.statusCode === 204) {
-        callback(null, { status: 204, message: 'Order canceled successfully' });
+        callback(null, { status: 204, message: 'Transaction canceled successfully' });
       } else {
         callback(body);
       }
@@ -363,10 +363,7 @@ Buttercoin.prototype.getOrderbook = function (timestamp, callback) {
       callback(err);
     } else {
       if (res.statusCode === 200) {
-        if (body.market)
-          callback(null, body.market);
-        else
-	  callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
+	callback(null, body.market);
       } else {
         callback(body);
       }
