@@ -66,7 +66,7 @@ Valid params include:
 `status` - enum: `['open', 'reopened', 'filled', 'canceled']`  
 `dateMin` - format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
 `dateMax` - format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
-`orderAction` - enum: `['buy', 'sell']`  
+`side` - enum: `['buy', 'sell']`  
 `orderType` - enum: `['market', 'limit']`  
 `page` - number of page requested, `integer`  
 `pageSize` - size of page requested, `integer`  
@@ -141,27 +141,21 @@ buttercoin.getTicker(new Date().getTime(), function (err, orderBook) {
 
 **Create Order**  
 
-Valid order params include:  
-`orderAction` - enum: `['buy', 'sell']`, required `true`  
+Valid order params include:
+`instrument` - enum: `['BTC_USD, USD_BTC']`
+`side` - enum: `['buy', 'sell']`, required `true`  
 `orderType` - enum: `['limit', 'market']`, required `true`  
-`price` - e.g. `{ amount: 100.11, currency: 'USD' }`, required `false`  
-`quantity` - e.g. `{ amount: 100.11, currency: 'BTC' }`, required `false`  
-`offered` - e.g. `{ amount: 100.11, currency: 'USD' }`, required `false`  
-`received` - enum: `['BTC']`, required `false`
+`price` - e.g. `600.11`, required `false`  
+`quantity` - e.g. `1.121`, required `false`
 
 ```javascript
 // create a JSON object with the following params
 var order = {
+  instrument: "BTC_USD",
   orderAction: "buy",
   orderType: "limit",
-  price: {
-    amount: '700.00',
-    currency: 'USD'
-  },
-  quantity: {
-    amount: '5',
-    currency: 'BTC'
-  }
+  price: "700.00"
+  quantity: "5"
 };
 
 buttercoin.createOrder(order, new Date().getTime(), function (err, order) {
