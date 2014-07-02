@@ -117,7 +117,7 @@ Buttercoin.prototype.getDepositAddress = function (timestamp, callback) {
 
 Buttercoin.prototype.getOrders = function (queryParams, timestamp, callback) {
   var url = this.buildUrl('orders');
-  var paramString = (queryParams && queryParams.length != 0) ? '' : "?" + qs.stringify(queryParams);
+  var paramString = (queryParams && Object.getOwnPropertyNames(queryParams).length === 0) ? '' : "?" + qs.stringify(queryParams);
   var signature = this.signUrl(url + paramString, timestamp);
 
   request.get({
@@ -210,7 +210,7 @@ Buttercoin.prototype.createOrder = function (params, timestamp, callback) {
 
 Buttercoin.prototype.getTransactions = function (queryParams, timestamp, callback) {
   var url = this.buildUrl('transactions');
-  var paramString = (queryParams && queryParams.length != 0) ? '' : "?" + qs.stringify(queryParams);
+  var paramString = (queryParams && Object.getOwnPropertyNames(queryParams).length === 0) ? '' : "?" + qs.stringify(queryParams);
   var signature = this.signUrl(url + paramString, timestamp);
 
   request.get({
