@@ -18,8 +18,7 @@ npm install node-buttercoin
 ```javascript
 // Configure Buttercoin instance.  Only apiKey and apiSecret are required.
 
-// The mode parameter defaults to the development staging environment.
-// For live data, send 'production' to the mode parameter.
+// The mode parameter defaults to the 'production' environment.
 
 // The version parameter defaults to the latest version as of this release, 'v1'
 
@@ -44,6 +43,16 @@ Returns `array` of permissions associated with this key
 
 ```javascript
 buttercoin.getKey(new Date().getTime(), function (err, key) {
+  console.log("key err", err);
+  console.log("key", key);
+});
+```
+
+**Balances**  
+Returns `array` of balances for this account
+
+```javascript
+buttercoin.getBalances(new Date().getTime(), function (err, key) {
   console.log("key err", err);
   console.log("key", key);
 });
