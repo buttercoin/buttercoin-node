@@ -11,9 +11,7 @@ module.exports = function (api_key, api_secret, mode, version) {
   if (!api_secret || api_secret.length !== 32)
     throw new Error('API Secret parameter must be specified and be of length 32 characters');
 
-  var api_url = 'https://api.qa.dcxft.com';
-  if (mode && mode === 'production')
-    api_url = 'https://api.buttercoin.com';
+  var api_url = 'https://api.buttercoin.com';
   return new Buttercoin(api_key, api_secret, api_url, version);
 };
 
