@@ -1,4 +1,4 @@
-node-buttercoin
+Buttercoin Node SDK Client
 ===============
 
 Official Node Client of the Buttercoin API.  Buttercoin is a trading platform that makes buying and selling bitcoin easy.
