@@ -149,8 +149,8 @@ Return the current bid, ask, and last sell prices on the Buttercoin platform
 
 ```javascript
 buttercoin.getTicker(function (err, ticker) {
-  console.log("order book err", err);
-  console.log("order book", ticker);
+  console.log("ticker err", err);
+  console.log("ticker", ticker);
 });
 ```
 
