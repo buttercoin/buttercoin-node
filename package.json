@@ -1,6 +1,6 @@
 {
-  "name": "node-buttercoin",
-  "version": "0.0.1",
+  "name": "buttercoinsdk-node",
+  "version": "0.0.2",
   "description": "Official Buttercoin API lib for node.js",
   "homepage": "https://github.com/buttercoin/node-buttercoin",
   "author": {
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/buttercoin/node-buttercoin.git"
+    "url": "git://github.com/buttercoin/buttercoinsdk-node.git"
   },
   "keywords": [
     "bitcoin",
