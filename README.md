@@ -8,7 +8,7 @@ Official Node Client of the Buttercoin API.  Buttercoin is a trading platform th
 Use npm to install
 
 ```javascript
-npm install node-buttercoin
+npm install buttercoinsdk-node
 ```
 
 ## Examples
@@ -29,7 +29,7 @@ API Version | `version` | The API Version.  Currently used to version the API UR
 
 // The version parameter defaults to the latest version as of this release, 'v1'
 
-var buttercoin = require('node-buttercoin')('<api_key>', '<api_secret>', '<environment>', '<version>');
+var buttercoin = require('buttercoinsdk-node')('<api_key>', '<api_secret>', '<environment>', '<version>');
 ```
 
 **Tips**
@@ -88,7 +88,7 @@ Date Max | `dateMax` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`
 
 ```javascript
 // query for multiple orders
-var orderParams = { orderAction: 'sell' };
+var orderParams = { side: 'sell' };
 
 buttercoin.getOrders(orderParams, new Date().getTime(), function (err, orders) {
   console.log("orders err", err);
