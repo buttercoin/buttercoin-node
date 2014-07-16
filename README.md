@@ -60,7 +60,7 @@ Returns `array` of balances for this account
 
 ```javascript
 buttercoin.getBalances(new Date().getTime(), function (err, balances) {
-  console.log("key err", err);
+  console.log("balances err", err);
   console.log("balances", balances);
 });
 ```
