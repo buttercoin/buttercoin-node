@@ -1,14 +1,14 @@
 {
-  "name": "node-buttercoin",
-  "version": "0.0.1",
+  "name": "buttercoinsdk-node",
+  "version": "0.0.2",
   "description": "Official Buttercoin API lib for node.js",
-  "homepage": "https://github.com/buttercoin/node-buttercoin",
+  "homepage": "https://github.com/buttercoin/buttercoinsdk-node",
   "author": {
     "name": "Kevin Adams",
     "email": "kevin@buttercoin.com"
   },
   "bugs": {
-    "url": "https://github.com/buttercoin/node-buttercoin/issues"
+    "url": "https://github.com/buttercoin/buttercoinsdk-node/issues"
   },
   "license": "MIT",
   "main": "index.js",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/buttercoin/node-buttercoin.git"
+    "url": "git://github.com/buttercoin/buttercoinsdk-node.git"
   },
   "keywords": [
     "bitcoin",

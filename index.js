@@ -12,6 +12,9 @@ module.exports = function (api_key, api_secret, mode, version) {
     throw new Error('API Secret parameter must be specified and be of length 32 characters');
 
   var api_url = 'https://api.buttercoin.com';
+  if (mode === "staging") {
+		api_url = 'https://api.qa.dcxft.com';
+  }
   return new Buttercoin(api_key, api_secret, api_url, version);
 };
 
@@ -33,11 +36,14 @@ Buttercoin.prototype.signUrl = function (urlString, timestamp) {
 };
 
 Buttercoin.prototype.getHeaders = function (signature, timestamp) {
-  var headers = {
-    'X-Buttercoin-Access-Key': this.apiKey,
-    'X-Buttercoin-Signature': signature,
-    'X-Buttercoin-Date': timestamp
-  }
+	var headers = {};
+  if (signature) {
+		headers = {
+			'X-Buttercoin-Access-Key': this.apiKey,
+			'X-Buttercoin-Signature': signature,
+			'X-Buttercoin-Date': timestamp
+		}
+	}
   return headers;
 };
 
@@ -105,7 +111,7 @@ Buttercoin.prototype.getDepositAddress = function (timestamp, callback) {
         if (body.address)
           callback(null, body.address);
         else
-	  callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
+					callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
       } else {
         callback(body);
       }
@@ -132,7 +138,7 @@ Buttercoin.prototype.getOrders = function (queryParams, timestamp, callback) {
         if (body.results)
           callback(null, body.results);
         else
-	  callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
+	  			callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
       } else {
         callback(body);
       }
@@ -225,7 +231,7 @@ Buttercoin.prototype.getTransactions = function (queryParams, timestamp, callbac
         if (body.results)
           callback(null, body.results);
         else
-	  callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
+	  			callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
       } else {
         callback(body);
       }
@@ -347,15 +353,14 @@ Buttercoin.prototype.send = function (params, timestamp, callback) {
   });
 };
 
-Buttercoin.prototype.getOrderbook = function (timestamp, callback) {
+Buttercoin.prototype.getOrderbook = function (callback) {
   var url = this.buildUrl('orderbook');
-  var signature = this.signUrl(url, timestamp);
 
   request.get({
     url: url,
     json: true,
     strictSSL: true,
-    headers: this.getHeaders(signature, timestamp)
+    headers: this.getHeaders()
   }, function (err, res, body) {
     if (err) {
       callback(err);
@@ -369,15 +374,14 @@ Buttercoin.prototype.getOrderbook = function (timestamp, callback) {
   });
 };
 
-Buttercoin.prototype.getTicker = function (timestamp, callback) {
+Buttercoin.prototype.getTicker = function (callback) {
   var url = this.buildUrl('ticker');
-  var signature = this.signUrl(url, timestamp);
 
   request.get({
     url: url,
     json: true,
     strictSSL: true,
-    headers: this.getHeaders(signature, timestamp)
+    headers: this.getHeaders()
   }, function (err, res, body) {
     if (err) {
       callback(err);
