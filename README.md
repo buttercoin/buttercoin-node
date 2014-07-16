@@ -15,6 +15,13 @@ npm install node-buttercoin
 
 ### Initialization
 
+Setting | Property Name | Description
+--- | --- | ---
+Public Key | `publicKey` | Your Buttercoin API Public Key  
+Secret Key | `secretKey` | Your Buttercoin API Secret Key  
+Environment | `environment` | Your development environment (default: `'production'`, set to `'staging'` to test with testnet bitcoins)
+API Version | `version` | The API Version.  Currently used to version the API URL and Service Description
+
 ```javascript
 // Configure Buttercoin instance.  Only apiKey and apiSecret are required.
 
@@ -22,7 +29,7 @@ npm install node-buttercoin
 
 // The version parameter defaults to the latest version as of this release, 'v1'
 
-var buttercoin = require('node-buttercoin')('<api_key>', '<api_secret>', '<mode>', '<version>');
+var buttercoin = require('node-buttercoin')('<api_key>', '<api_secret>', '<environment>', '<version>');
 ```
 
 **Tips**
@@ -71,14 +78,13 @@ buttercoin.getDepositAddress(new Date().getTime(), function (err, address) {
 **Get Orders**  
 Returns `array` of `JSON Objects` containing information about buy and sell orders
 
-Valid params include:  
-`status` - enum: `['open', 'reopened', 'filled', 'canceled']`  
-`dateMin` - format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
-`dateMax` - format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
-`side` - enum: `['buy', 'sell']`  
-`orderType` - enum: `['market', 'limit']`  
-`page` - number of page requested, `integer`  
-`pageSize` - size of page requested, `integer`  
+Name | Param | Description
+--- | --- | ---
+Status | `status` | enum: `['opened', 'reopened', 'filled', 'canceled']`  
+Side | `side` | enum: `['buy', 'sell']`  
+Order Type | `orderType` | enum: `['market', 'limit']`  
+Date Min | `dateMin` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
+Date Max | `dateMax` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
 
 ```javascript
 // query for multiple orders
@@ -98,16 +104,15 @@ buttercoin.getOrder(orderId, new Date().getTime(), function (err, orders) {
 });
 ```
 
-**Get Transaction**  
+**Get Transactions**  
 Returns `array` of `JSON Objects` containing information about deposit and withdraw action
 
-Valid params include:  
-`status` - enum: `['pending', 'processing', 'funded', 'canceled', 'failed']`  
-`dateMin`  - format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
-`dateMax` - format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
-`transactionType` - enum: `['deposit', 'withdrawal']`  
-`page` - number of page requested, `integer`  
-`pageSize` - size of page requested, `integer`  
+Name | Param | Description
+--- | --- | ---
+Status | `status` | enum: `['pending', 'processing', 'funded', 'canceled', 'failed']`  
+Transaction Type | `transactionType` | enum: `['deposit', 'withdrawal']`  
+Date Min | `dateMin` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
+Date Max | `dateMax` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
 
 ```javascript
 // query for multiple transactions
@@ -118,6 +123,7 @@ buttercoin.getTransactions(trxnParams, new Date().getTime(), function (err, orde
   console.log("trxn", orders);
 });
 
+// single transaction by id
 var trxnId = '53a22ce164f23e7301a4fee5';
 
 buttercoin.getTransaction(trxnId, new Date().getTime(), function (err, transaction) {
@@ -126,11 +132,13 @@ buttercoin.getTransaction(trxnId, new Date().getTime(), function (err, transacti
 });
 ```
 
+###### Unauthenticated Requests (not subject to daily API rate limit)
+
 **Get Order Book**  
 Return an `array` of current orders in the Buttercoin order book
 
 ```javascript
-buttercoin.getOrderbook(new Date().getTime(), function (err, orderBook) {
+buttercoin.getOrderbook(function (err, orderBook) {
   console.log("order book err", err);
   console.log("order book", orderBook);
 });
@@ -140,22 +148,25 @@ buttercoin.getOrderbook(new Date().getTime(), function (err, orderBook) {
 Return the current bid, ask, and last sell prices on the Buttercoin platform
 
 ```javascript
-buttercoin.getTicker(new Date().getTime(), function (err, orderBook) {
+buttercoin.getTicker(function (err, ticker) {
   console.log("order book err", err);
-  console.log("order book", orderBook);
+  console.log("order book", ticker);
 });
 ```
 
 ### Create New Actions
 
-**Create Order**  
+**Create Order**
 
 Valid order params include:
-`instrument` - enum: `['BTC_USD, USD_BTC']`
-`side` - enum: `['buy', 'sell']`, required `true`  
-`orderType` - enum: `['limit', 'market']`, required `true`  
-`price` - e.g. `600.11`, required `false`  
-`quantity` - e.g. `1.121`, required `false`
+
+Name | Param | Description
+--- | --- | ---
+Instrument | `instrument` | enum: `['BTC_USD, USD_BTC']`
+Side | `side` | enum: `['buy', 'sell']`, required `true`  
+Order Type | `orderType` | enum: `['limit', 'market']`, required `true`  
+Price | `price` | `string`, required `false`  
+Quantity | `quantity` | `string`, required `false`
 
 ```javascript
 // create a JSON object with the following params
@@ -176,9 +187,12 @@ buttercoin.createOrder(order, new Date().getTime(), function (err, order) {
 **Create Transaction**  
 
 Deposit transaction params include:  
-`method` - enum: `['wire']`, required `true`  
-`currency` - enum: `['USD']`, required `true`  
-`amount` - `float`, required true  
+
+Name | Param | Description
+--- | --- | ---
+Method | `method` | enum: `['wire']`, required `true`  
+Currency | `currency` | enum: `['USD']`, required `true`  
+Amount | `amount` | `string`, required `true`  
 
 ```javascript
 // create deposit
@@ -195,9 +209,12 @@ buttercoin.createDeposit(trxnObj, new Date().getTime(), function (err, trxn) {
 ```
 
 Withdrawal transaction params include:  
-`method` - enum: `['wire']`, required `true`  
-`currency` - enum: `['USD']`, required `true`  
-`amount` - `float`, required true  
+
+Name | Param | Description
+--- | --- | --- 
+Method | `method` | enum: `['check']`, required `true`  
+Currency | `currency` | enum: `['USD']`, required `true`  
+Amount | `amount` | `string`, required `true`
 
 ```javascript
 // create withdrawal
@@ -213,9 +230,12 @@ buttercoin.createWithdrawal(trxnObj, new Date().getTime(), function (err, trxn) 
 });
 ```
 Send bitcoin transaction params include:  
-`method` - enum: `['wire']`, required `true`  
-`currency` - enum: `['USD']`, required `true`  
-`destination` - address to which to send currency `string`, required true  
+
+Name | Param | Description
+--- | --- | --- 
+Currency | `currency` | `['USD']`, required `true`  
+Amount | `amount` | `string`, required `true`  
+Destination | `destination` | address to which to send currency `string`, required `true`   
 
 ```javascript
 // send bitcoins to an address
@@ -259,7 +279,7 @@ buttercoin.cancelTransaction(trxnId, new Date().getTime(), function (err, msg) {
 ## Further Reading
 
 [Buttercoin - Website](https://www.buttercoin.com)  
-[Buttercoin API Docs](https://www.buttercoin.com/#/api-docs)
+[Buttercoin API Docs](https://developer.buttercoin.com)
 
 ## Contributing
 
@@ -272,6 +292,11 @@ The aim is to take your great ideas and make everyone's experience using Butterc
 ### 0.0.1
 
 - First release.
+
+### 0.0.2
+
+- Added support for unauthenticated requests
+- Fixed README format and accuracy
 
 ## License
 

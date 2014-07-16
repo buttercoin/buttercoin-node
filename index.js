@@ -13,7 +13,7 @@ module.exports = function (api_key, api_secret, mode, version) {
 
   var api_url = 'https://api.buttercoin.com';
   if (mode === "staging") {
-		api_url = 'https://api.qa.dxcft.com';
+		api_url = 'https://api.qa.dcxft.com';
   }
   return new Buttercoin(api_key, api_secret, api_url, version);
 };
