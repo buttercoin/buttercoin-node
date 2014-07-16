@@ -25,7 +25,7 @@ API Version | `version` | The API Version.  Currently used to version the API UR
 ```javascript
 // Configure Buttercoin instance.  Only apiKey and apiSecret are required.
 
-// The mode parameter defaults to the 'production' environment.
+// The environment parameter defaults to the 'production' environment.
 
 // The version parameter defaults to the latest version as of this release, 'v1'
 
@@ -59,9 +59,9 @@ buttercoin.getKey(new Date().getTime(), function (err, key) {
 Returns `array` of balances for this account
 
 ```javascript
-buttercoin.getBalances(new Date().getTime(), function (err, key) {
+buttercoin.getBalances(new Date().getTime(), function (err, balances) {
   console.log("key err", err);
-  console.log("key", key);
+  console.log("balances", balances);
 });
 ```
 
