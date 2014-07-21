@@ -356,28 +356,17 @@ Buttercoin.prototype.send = function (params, timestamp, callback) {
 Buttercoin.prototype.getOrderbook = function (callback) {
   var url = this.buildUrl('orderbook');
 
-  request.get({
-    url: url,
-    json: true,
-    strictSSL: true,
-    headers: this.getHeaders()
-  }, function (err, res, body) {
-    if (err) {
-      callback(err);
-    } else {
-      if (res.statusCode === 200) {
-	callback(null, body.market);
-      } else {
-        callback(body);
-      }
-    } 
-  });
+  self.getUnauthenticated(url, callback);
 };
 
 Buttercoin.prototype.getTicker = function (callback) {
   var url = this.buildUrl('ticker');
 
-  request.get({
+ 	self.getUnauthenticated(url, callback); 
+};
+
+Buttercoin.prototype.getUnauthenticated = function (url, callback) {
+	request.get({
     url: url,
     json: true,
     strictSSL: true,

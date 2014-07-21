@@ -298,6 +298,10 @@ The aim is to take your great ideas and make everyone's experience using Butterc
 - Added support for unauthenticated requests
 - Fixed README format and accuracy
 
+### 0.0.3
+
+- Fixed issue with orderbook returning null
+
 ## License
 
 Licensed under the MIT license.
