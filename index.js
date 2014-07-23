@@ -21,13 +21,13 @@ module.exports = function (api_key, api_secret, mode, version) {
 function Buttercoin (api_key, api_secret, api_url, version) {
   this.apiKey = api_key;
   this.apiSecret = api_secret;
-  this.version = version || "v1" // default to latest API version as of this Client release
-  this.apiUrl = api_url
-};
+  this.version = version || "v1"; // default to latest API version as of this Client release
+  this.apiUrl = api_url;
+}
 
 Buttercoin.prototype.buildUrl = function (endpoint) {
   return this.apiUrl + "/" + this.version + "/" + endpoint;
-}
+};
 
 Buttercoin.prototype.signUrl = function (urlString, timestamp) {
   urlString = new Buffer(timestamp + urlString, 'UTF-8').toString('base64');
@@ -42,7 +42,7 @@ Buttercoin.prototype.getHeaders = function (signature, timestamp) {
 			'X-Buttercoin-Access-Key': this.apiKey,
 			'X-Buttercoin-Signature': signature,
 			'X-Buttercoin-Date': timestamp
-		}
+		};
 	}
   return headers;
 };
@@ -64,7 +64,7 @@ Buttercoin.prototype.getKey = function (timestamp, callback) {
         if (body.permissions)
           callback(null, body.permissions);
         else
-	  callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
+        callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
       } else {
         callback(body);
       }
@@ -90,7 +90,7 @@ Buttercoin.prototype.getBalances = function (timestamp, callback) {
       } else {
         callback(body);
       }
-    } 
+    }
   });
 };
 
@@ -115,7 +115,7 @@ Buttercoin.prototype.getDepositAddress = function (timestamp, callback) {
       } else {
         callback(body);
       }
-    } 
+    }
   });
 };
 
@@ -138,11 +138,11 @@ Buttercoin.prototype.getOrders = function (queryParams, timestamp, callback) {
         if (body.results)
           callback(null, body.results);
         else
-	  			callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
+          callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
       } else {
         callback(body);
       }
-    } 
+    }
   });
 };
 
@@ -164,7 +164,7 @@ Buttercoin.prototype.getOrder = function (orderId, timestamp, callback) {
       } else {
         callback(body);
       }
-    } 
+    }
   });
 };
 
@@ -186,7 +186,7 @@ Buttercoin.prototype.cancelOrder = function (orderId, timestamp, callback) {
       } else {
         callback(body);
       }
-    } 
+    }
   });
 };
 
@@ -208,7 +208,7 @@ Buttercoin.prototype.createOrder = function (params, timestamp, callback) {
       } else {
         callback(body);
       }
-    } 
+    }
   });
 };
 
@@ -231,11 +231,11 @@ Buttercoin.prototype.getTransactions = function (queryParams, timestamp, callbac
         if (body.results)
           callback(null, body.results);
         else
-	  			callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
+          callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
       } else {
         callback(body);
       }
-    } 
+    }
   });
 };
 
@@ -257,7 +257,7 @@ Buttercoin.prototype.getTransaction = function (trxnId, timestamp, callback) {
       } else {
         callback(body);
       }
-    } 
+    }
   });
 };
 
@@ -279,7 +279,7 @@ Buttercoin.prototype.cancelTransaction = function (trxnId, timestamp, callback) 
       } else {
         callback(body);
       }
-    } 
+    }
   });
 };
 
@@ -301,7 +301,7 @@ Buttercoin.prototype.createDeposit = function (params, timestamp, callback) {
       } else {
         callback(body);
       }
-    } 
+    }
   });
 };
 
@@ -325,7 +325,7 @@ Buttercoin.prototype.createWithdrawal = function (params, timestamp, callback) {
       } else {
         callback(body);
       }
-    } 
+    }
   });
 };
 
@@ -349,20 +349,19 @@ Buttercoin.prototype.send = function (params, timestamp, callback) {
       } else {
         callback(body);
       }
-    } 
+    }
   });
 };
 
 Buttercoin.prototype.getOrderbook = function (callback) {
   var url = this.buildUrl('orderbook');
 
-  self.getUnauthenticated(url, callback);
+  this.getUnauthenticated(url, callback);
 };
 
 Buttercoin.prototype.getTicker = function (callback) {
   var url = this.buildUrl('ticker');
-
- 	self.getUnauthenticated(url, callback); 
+  this.getUnauthenticated(url, callback);
 };
 
 Buttercoin.prototype.getUnauthenticated = function (url, callback) {
@@ -380,6 +379,6 @@ Buttercoin.prototype.getUnauthenticated = function (url, callback) {
       } else {
         callback(body);
       }
-    } 
+    }
   });
 };
