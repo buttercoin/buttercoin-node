@@ -302,6 +302,10 @@ The aim is to take your great ideas and make everyone's experience using Butterc
 
 - Fixed issue with orderbook returning null
 
+### 0.0.4
+
+- Fixed issue with self not defined
+
 ## License
 
 Licensed under the MIT license.
