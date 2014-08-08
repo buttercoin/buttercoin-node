@@ -284,7 +284,7 @@ Buttercoin.prototype.getTransactions = function (queryParams, timestamp, callbac
         if (body.results)
           callback(null, body.results);
         else
-          callback({ errors: [{ message: unexpected_response }]});
+          callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
       } else {
         callback(body);
       }
