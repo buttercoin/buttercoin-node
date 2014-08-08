@@ -29,7 +29,7 @@ API Version | `version` | The API Version.  Currently used to version the API UR
 
 // The version parameter defaults to the latest version as of this release, 'v1'
 
-var buttercoin = require('buttercoinsdk-node')('<api_key>', '<api_secret>', '<environment>', '<version>');
+var client = require('buttercoinsdk-node')('<api_key>', '<api_secret>', '<environment>', '<version>');
 ```
 
 **Tips**
@@ -41,6 +41,14 @@ Because of this, if you need your API calls to run in a certain order, you must 
 
 ```
 var timestamp = new Date().getTime();
+```
+
+*Additionally, for convenience, if you don't include the timestamp parameter, it will default to the current timestamp.*
+
+```
+client.getKey(function (err, key) {
+  // do something amazing!
+});
 ```
 
 ### Get Data
@@ -80,7 +88,7 @@ Returns `array` of `JSON Objects` containing information about buy and sell orde
 
 Name | Param | Description
 --- | --- | ---
-Status | `status` | enum: `['opened', 'reopened', 'filled', 'canceled']`  
+Status | `status` | enum: `['opened', 'partial-filled', 'filled', 'canceled']`  
 Side | `side` | enum: `['buy', 'sell']`  
 Order Type | `orderType` | enum: `['market', 'limit']`  
 Date Min | `dateMin` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
@@ -89,7 +97,7 @@ Date Max | `dateMax` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`
 ```javascript
 // query for multiple orders
 var orderParams = { side: 'sell' };
-
+// the query parameter is optional and can be omitted for convenience to search all orders
 buttercoin.getOrders(orderParams, new Date().getTime(), function (err, orders) {
   console.log("orders err", err);
   console.log("orders", orders);
@@ -98,7 +106,15 @@ buttercoin.getOrders(orderParams, new Date().getTime(), function (err, orders) {
 // single order by id
 var orderId = '<order_id>';
 
-buttercoin.getOrder(orderId, new Date().getTime(), function (err, orders) {
+buttercoin.getOrderById(orderId, new Date().getTime(), function (err, orders) {
+  console.log("order err", err);
+  console.log("single order", orders);
+});
+
+// single order by url
+var url = '<url>';
+
+buttercoin.getOrderByUrl(url, new Date().getTime(), function (err, orders) {
   console.log("order err", err);
   console.log("single order", orders);
 });
@@ -117,7 +133,7 @@ Date Max | `dateMax` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`
 ```javascript
 // query for multiple transactions
 var trxnParams = {};
-
+// the query parameter is optional and can be omitted for convenience to search all trxns
 buttercoin.getTransactions(trxnParams, new Date().getTime(), function (err, orders) {
   console.log("trxn err", err);
   console.log("trxn", orders);
@@ -130,9 +146,17 @@ buttercoin.getTransaction(trxnId, new Date().getTime(), function (err, transacti
   console.log("single trxn err", err);
   console.log("single trxn", transaction);
 });
+
+// single transaction by url
+var url = 'https://api.buttercoin.com/v1/transactions/53e539aa64f23ec123931c11';
+
+buttercoin.getTransaction(url, new Date().getTime(), function (err, transaction) {
+  console.log("single trxn err", err);
+  console.log("single trxn", transaction);
+});
 ```
 
-###### Unauthenticated Requests (not subject to daily API rate limit)
+###### Unauthenticated Requests
 
 **Get Order Book**  
 Return an `array` of current orders in the Buttercoin order book
