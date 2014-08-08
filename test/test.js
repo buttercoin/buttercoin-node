@@ -22,7 +22,7 @@ describe("Buttercoin", function () {
       should.exist(buttercoin);
       buttercoin.apiKey.should.equal(api_key);
       buttercoin.apiSecret.should.equal(api_secret);
-      buttercoin.apiUrl.should.equal('http://api.buttercoin.com');
+      buttercoin.apiUrl.should.equal('https://api.buttercoin.com');
       buttercoin.version.should.equal(version);
     });
 
@@ -64,21 +64,21 @@ describe("Buttercoin", function () {
 
     it("should point to staging if mode is not production", function () {
       buttercoin = require('../')('abcdefghijklmnopqrstuvwxyz123456', 'abcdefghijklmnopqrstuvwxyz123456', 'staging');
-      buttercoin.apiUrl.should.equal('http://api.qa.dcxft.com');
+      buttercoin.apiUrl.should.equal('https://api.qa.dcxft.com');
     });
 
     it("should build a url correctly with the given endpoint, sign the url and build the headers", function () {
       buttercoin = require('../')('abcdefghijklmnopqrstuvwxyz123457', 'abcdefghijklmnopqrstuvwxyz123456', 'production');
       var url = buttercoin.buildUrl('key');
-      url.should.equal('http://api.buttercoin.com/v1/key');
+      url.should.equal('https://api.buttercoin.com/v1/key');
 
       var timestamp = '1403558182457';
       var signature = buttercoin.signUrl(url, timestamp);
-      signature.should.equal("HMuwfFhfrDY0C0F435vnJ1o2MOVGOzKJtDhAD8q1yMM=");
+      signature.should.equal("amakcIy40XLCUaSz6urhl+687F2pIexux+TJ2bl+66I=");
 
       var headers = buttercoin.getHeaders(signature, timestamp);
       headers['X-Buttercoin-Access-Key'].should.equal('abcdefghijklmnopqrstuvwxyz123457');
-      headers['X-Buttercoin-Signature'].should.equal('HMuwfFhfrDY0C0F435vnJ1o2MOVGOzKJtDhAD8q1yMM=');
+      headers['X-Buttercoin-Signature'].should.equal('amakcIy40XLCUaSz6urhl+687F2pIexux+TJ2bl+66I=');
       headers['X-Buttercoin-Date'].should.equal('1403558182457');
     });
 
