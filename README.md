@@ -57,7 +57,7 @@ client.getKey(function (err, key) {
 Returns `array` of permissions associated with this key
 
 ```javascript
-buttercoin.getKey(new Date().getTime(), function (err, key) {
+client.getKey(new Date().getTime(), function (err, key) {
   console.log("key err", err);
   console.log("key", key);
 });
@@ -67,7 +67,7 @@ buttercoin.getKey(new Date().getTime(), function (err, key) {
 Returns `array` of balances for this account
 
 ```javascript
-buttercoin.getBalances(new Date().getTime(), function (err, balances) {
+client.getBalances(new Date().getTime(), function (err, balances) {
   console.log("balances err", err);
   console.log("balances", balances);
 });
@@ -77,7 +77,7 @@ buttercoin.getBalances(new Date().getTime(), function (err, balances) {
 Returns bitcoin address `string` to deposit your funds into the Buttercoin platform
 
 ```javascript
-buttercoin.getDepositAddress(new Date().getTime(), function (err, address) {
+client.getDepositAddress(new Date().getTime(), function (err, address) {
   console.log("address err", err);
   console.log("address", address);
 });
@@ -98,7 +98,7 @@ Date Max | `dateMax` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`
 // query for multiple orders
 var orderParams = { side: 'sell' };
 // the query parameter is optional and can be omitted for convenience to search all orders
-buttercoin.getOrders(orderParams, new Date().getTime(), function (err, orders) {
+client.getOrders(orderParams, new Date().getTime(), function (err, orders) {
   console.log("orders err", err);
   console.log("orders", orders);
 });
@@ -106,7 +106,7 @@ buttercoin.getOrders(orderParams, new Date().getTime(), function (err, orders) {
 // single order by id
 var orderId = '<order_id>';
 
-buttercoin.getOrderById(orderId, new Date().getTime(), function (err, orders) {
+client.getOrderById(orderId, new Date().getTime(), function (err, orders) {
   console.log("order err", err);
   console.log("single order", orders);
 });
@@ -114,7 +114,7 @@ buttercoin.getOrderById(orderId, new Date().getTime(), function (err, orders) {
 // single order by url
 var url = '<url>';
 
-buttercoin.getOrderByUrl(url, new Date().getTime(), function (err, orders) {
+client.getOrderByUrl(url, new Date().getTime(), function (err, orders) {
   console.log("order err", err);
   console.log("single order", orders);
 });
@@ -134,7 +134,7 @@ Date Max | `dateMax` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`
 // query for multiple transactions
 var trxnParams = {};
 // the query parameter is optional and can be omitted for convenience to search all trxns
-buttercoin.getTransactions(trxnParams, new Date().getTime(), function (err, orders) {
+client.getTransactions(trxnParams, new Date().getTime(), function (err, orders) {
   console.log("trxn err", err);
   console.log("trxn", orders);
 });
@@ -142,7 +142,7 @@ buttercoin.getTransactions(trxnParams, new Date().getTime(), function (err, orde
 // single transaction by id
 var trxnId = '53a22ce164f23e7301a4fee5';
 
-buttercoin.getTransaction(trxnId, new Date().getTime(), function (err, transaction) {
+client.getTransaction(trxnId, new Date().getTime(), function (err, transaction) {
   console.log("single trxn err", err);
   console.log("single trxn", transaction);
 });
@@ -150,7 +150,7 @@ buttercoin.getTransaction(trxnId, new Date().getTime(), function (err, transacti
 // single transaction by url
 var url = 'https://api.buttercoin.com/v1/transactions/53e539aa64f23ec123931c11';
 
-buttercoin.getTransaction(url, new Date().getTime(), function (err, transaction) {
+client.getTransaction(url, new Date().getTime(), function (err, transaction) {
   console.log("single trxn err", err);
   console.log("single trxn", transaction);
 });
@@ -162,7 +162,7 @@ buttercoin.getTransaction(url, new Date().getTime(), function (err, transaction)
 Return an `array` of current orders in the Buttercoin order book
 
 ```javascript
-buttercoin.getOrderbook(function (err, orderBook) {
+client.getOrderbook(function (err, orderBook) {
   console.log("order book err", err);
   console.log("order book", orderBook);
 });
@@ -172,7 +172,7 @@ buttercoin.getOrderbook(function (err, orderBook) {
 Return the current bid, ask, and last sell prices on the Buttercoin platform
 
 ```javascript
-buttercoin.getTicker(function (err, ticker) {
+client.getTicker(function (err, ticker) {
   console.log("ticker err", err);
   console.log("ticker", ticker);
 });
@@ -202,7 +202,7 @@ var order = {
   quantity: "5"
 };
 
-buttercoin.createOrder(order, new Date().getTime(), function (err, order) {
+client.createOrder(order, new Date().getTime(), function (err, order) {
   console.log("create order err", err);
   console.log("create order", order);
 });
@@ -226,7 +226,7 @@ var trxnObj = {
   amount: "5002"
 };
 
-buttercoin.createDeposit(trxnObj, new Date().getTime(), function (err, trxn) {
+client.createDeposit(trxnObj, new Date().getTime(), function (err, trxn) {
   console.log("create trxn err", err);
   console.log("create trxn", trxn);
 });
@@ -248,7 +248,7 @@ var trxnObj = {
   amount: "100"
 };
 
-buttercoin.createWithdrawal(trxnObj, new Date().getTime(), function (err, trxn) {
+client.createWithdrawal(trxnObj, new Date().getTime(), function (err, trxn) {
   console.log("create trxn err", err);
   console.log("create trxn", trxn);
 });
@@ -269,7 +269,7 @@ var trxnObj = {
   destination: "<bitcoin_address>"
 };
 
-buttercoin.send(trxnObj, new Date().getTime(), function (err, trxn) {
+client.send(trxnObj, new Date().getTime(), function (err, trxn) {
   console.log("create trxn err", err);
   console.log("create trxn", trxn);
 });
@@ -284,7 +284,7 @@ All successful cancel calls to the API return a response status of `204` with a 
 Cancel a pending buy or sell order
 
 ```javascript
-buttercoin.cancelOrder(orderId, new Date().getTime(), function (err, msg) {
+client.cancelOrder(orderId, new Date().getTime(), function (err, msg) {
   console.log("cancel order err", err);
   console.log("cancel order", msg);
 });
@@ -294,7 +294,7 @@ buttercoin.cancelOrder(orderId, new Date().getTime(), function (err, msg) {
 Cancel a pending deposit or withdraw action
 
 ```javascript
-buttercoin.cancelTransaction(trxnId, new Date().getTime(), function (err, msg) {
+client.cancelTransaction(trxnId, new Date().getTime(), function (err, msg) {
   console.log("cancel trxn err", err);
   console.log("cancel trxn", msg);
 });
