@@ -61,7 +61,7 @@ Buttercoin.prototype.buildRequest = function (method, endpoint, timestamp, body)
     signature = this.signUrl(url + paramString, timestamp);
     options['qs'] = body;
     options['json'] = true;
-  } else if (method == 'POST') {
+  } else if (method === 'POST') {
     signature = this.signUrl(url + JSON.stringify(body), timestamp);
     options['json'] = body;
   } else {
@@ -147,6 +147,7 @@ Buttercoin.prototype.getDepositAddress = function (timestamp, callback) {
 };
 
 Buttercoin.prototype.getOrders = function (queryParams, timestamp, callback) {
+  // queryParams and timestamp are optional fields, so handle dynamic method parameters
   if (arguments.length === 2) {
     callback = timestamp;
     if (+queryParams && isFinite(queryParams) && !(queryParams % 1)) {
@@ -259,6 +260,7 @@ Buttercoin.prototype.createOrder = function (params, timestamp, callback) {
 };
 
 Buttercoin.prototype.getTransactions = function (queryParams, timestamp, callback) {
+  // queryParams and timestamp are optional fields, so handle dynamic method parameters
   if (arguments.length === 2) {
     callback = timestamp;
     if (+queryParams && isFinite(queryParams) && !(queryParams % 1)) {
@@ -431,7 +433,7 @@ Buttercoin.prototype.getTicker = function (callback) {
 };
 
 Buttercoin.prototype.getUnauthenticated = function (url, callback) {
-	request.get({
+  request.get({
     url: url,
     json: true,
     strictSSL: true

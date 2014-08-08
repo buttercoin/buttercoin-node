@@ -269,7 +269,7 @@ var trxnObj = {
   destination: "<bitcoin_address>"
 };
 
-client.send(trxnObj, new Date().getTime(), function (err, trxn) {
+client.sendBitcoin(trxnObj, new Date().getTime(), function (err, trxn) {
   console.log("create trxn err", err);
   console.log("create trxn", trxn);
 });
