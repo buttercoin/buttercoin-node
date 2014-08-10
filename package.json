@@ -1,6 +1,6 @@
 {
   "name": "buttercoinsdk-node",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Official Buttercoin API lib for node.js",
   "homepage": "https://github.com/buttercoin/buttercoinsdk-node",
   "author": {
