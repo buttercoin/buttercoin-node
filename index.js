@@ -147,277 +147,65 @@ Buttercoin.prototype.getDepositAddress = function (timestamp, callback) {
 };
 
 Buttercoin.prototype.getOrders = function (queryParams, timestamp, callback) {
-  // queryParams and timestamp are optional fields, so handle dynamic method parameters
-  if (arguments.length === 2) {
-    callback = timestamp;
-    if (+queryParams && isFinite(queryParams) && !(queryParams % 1)) {
-      timestamp = queryParams;
-      queryParams = undefined;
-    } else {
-      timestamp = undefined;
-    }
-  } else if (arguments.length === 1) {
-    callback = queryParams;
-    timestamp = undefined;
-    queryParams = undefined;
-  }
-
-  var endpoint = 'orders';
-  var options = this.buildRequest('GET', endpoint, timestamp, queryParams);
-
-  request(options, function (err, res, body) {
-    if (err) {
-      callback(err);
-    } else {
-      if (res.statusCode === 200) {
-        if (body.results)
-          callback(null, body.results);
-        else
-          callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
-      } else {
-        callback(body);
-      }
-    }
-  });
+  this.getRecords('orders', queryParams, timestamp, callback);
 };
 
 Buttercoin.prototype.getOrderById = function (orderId, timestamp, callback) {
-  if (arguments.length === 2) {
-    callback = timestamp;
-    timestamp = undefined;
-  }
-
   var endpoint = 'orders/' + orderId;
-  var options = this.buildRequest('GET', endpoint, timestamp);
-
-  request(options, function (err, res, body) {
-    if (err) {
-      callback(err);
-    } else {
-      if (res.statusCode === 200) {
-        callback(null, body);
-      } else {
-        callback(body);
-      }
-    }
-  });
+  this.getRecordById(endpoint, timestamp, callback);
 };
 
 Buttercoin.prototype.getOrder = Buttercoin.prototype.getOrderById
 
 Buttercoin.prototype.getOrderByUrl = function (url, timestamp, callback) {
-  if (arguments.length === 2) {
-    callback = timestamp;
-    timestamp = undefined;
-  }
-
   var orderId = url.substring(url.lastIndexOf('/')+1);
   return this.getOrderById(orderId, timestamp, callback);
 };
 
 Buttercoin.prototype.cancelOrder = function (orderId, timestamp, callback) {
-  if (arguments.length === 2) {
-    callback = timestamp;
-    timestamp = undefined;
-  }
-
   var endpoint = 'orders/' + orderId;
-  var options = this.buildRequest('DELETE', endpoint, timestamp);
-
-  request(options, function (err, res, body) {
-    if (err) {
-      callback(err);
-    } else {
-      if (res.statusCode === 204) {
-        callback(null, { status: 204, message: 'This operation has completed successfully' });
-      } else {
-        callback(body);
-      }
-    }
-  });
+  this.cancelRecord(endpoint, timestamp, callback);
 };
 
 Buttercoin.prototype.createOrder = function (params, timestamp, callback) {
-  if (arguments.length === 2) {
-    callback = timestamp;
-    timestamp = undefined;
-  }
-
   var endpoint = 'orders';
-  var options = this.buildRequest('POST', endpoint, timestamp, params);
-
-  request(options, function (err, res, body) {
-    if (err) {
-      callback(err);
-    } else {
-      if (res.statusCode === 202) {
-        callback(null, { status: 202, order: res.headers.location });
-      } else {
-        callback(body);
-      }
-    }
-  });
+  this.createRecord(endpoint, params, timestamp, callback);
 };
 
 Buttercoin.prototype.getTransactions = function (queryParams, timestamp, callback) {
-  // queryParams and timestamp are optional fields, so handle dynamic method parameters
-  if (arguments.length === 2) {
-    callback = timestamp;
-    if (+queryParams && isFinite(queryParams) && !(queryParams % 1)) {
-      timestamp = queryParams;
-      queryParams = undefined;
-    } else {
-      timestamp = undefined;
-    }
-  } else if (arguments.length === 1) {
-    callback = queryParams;
-    timestamp = undefined;
-    queryParams = undefined;
-  }
-
-  var endpoint = 'transactions';
-  var options = this.buildRequest('GET', endpoint, timestamp, queryParams);
-
-  request(options, function (err, res, body) {
-    if (err) {
-      callback(err);
-    } else {
-      if (res.statusCode === 200) {
-        if (body.results)
-          callback(null, body.results);
-        else
-          callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
-      } else {
-        callback(body);
-      }
-    }
-  });
+  this.getRecords('transactions', queryParams, timestamp, callback);
 };
 
 Buttercoin.prototype.getTransactionById = function (trxnId, timestamp, callback) {
-  if (arguments.length === 2) {
-    callback = timestamp;
-    timestamp = undefined;
-  }
-
   var endpoint = 'transactions/' + trxnId;
-  var options = this.buildRequest('get', endpoint, timestamp);
-
-  request(options, function (err, res, body) {
-    if (err) {
-      callback(err);
-    } else {
-      if (res.statusCode === 200) {
-        callback(null, body);
-      } else {
-        callback(body);
-      }
-    }
-  });
+  this.getRecordById(endpoint, timestamp, callback);
 };
 
 Buttercoin.prototype.getTransaction = Buttercoin.prototype.getTransactionById
 
 Buttercoin.prototype.getTransactionByUrl = function (url, timestamp, callback) {
-  if (arguments.length === 2) {
-    callback = timestamp;
-    timestamp = undefined;
-  }
-
   var trxnId = url.substring(url.lastIndexOf('/')+1);
   return this.getTransactionById(trxnId, timestamp, callback);
 };
 
 Buttercoin.prototype.cancelTransaction = function (trxnId, timestamp, callback) {
-  if (arguments.length === 2) {
-    callback = timestamp;
-    timestamp = undefined;
-  }
-
   var endpoint = 'transactions/' + trxnId;
-  var options = this.buildRequest('DELETE', endpoint, timestamp);
-
-  request(options, function (err, res, body) {
-    if (err) {
-      callback(err);
-    } else {
-      if (res.statusCode === 204) {
-        callback(null, { status: 204, message: 'This operation has completed successfully' });
-      } else {
-        callback(body);
-      }
-    }
-  });
+  this.cancelRecord(endpoint, timestamp, callback);
 };
 
 Buttercoin.prototype.createDeposit = function (params, timestamp, callback) {
-  if (arguments.length === 2) {
-    callback = timestamp;
-    timestamp = undefined;
-  }
-
   var endpoint = 'transactions/deposit';
-  var options = this.buildRequest('POST', endpoint, timestamp, params);
-
-  request(options, function (err, res, body) {
-    if (err) {
-      callback(err);
-    } else {
-      if (res.statusCode === 202) {
-        callback(null, { status: 202, transaction: res.headers.location });
-      } else {
-        callback(body);
-      }
-    }
-  });
+  this.createRecord(endpoint, params, timestamp, callback);
 };
 
 Buttercoin.prototype.createWithdrawal = function (params, timestamp, callback) {
-  if (arguments.length === 2) {
-    callback = timestamp;
-    timestamp = undefined;
-  }
-
   var endpoint = 'transactions/withdrawal';
-  var options = this.buildRequest('POST', endpoint, timestamp, params);
-
-  request(options, function (err, res, body) {
-    if (err) {
-      callback(err);
-    } else {
-      if (res.statusCode === 201) {
-        callback(null, { status: 201, message: 'Withdraw request created, but email confirmation is required' });
-      } else if (res.statusCode === 202) {
-        callback(null, { status: 202, transaction: res.headers.location });
-      } else {
-        callback(body);
-      }
-    }
-  });
+  this.createRecord(endpoint, params, timestamp, callback);
 };
 
 Buttercoin.prototype.send = function (params, timestamp, callback) {
-  if (arguments.length === 2) {
-    callback = timestamp;
-    timestamp = undefined;
-  }
-
   var endpoint = 'transactions/send';
-  var options = this.buildRequest('POST', endpoint, timestamp, params);
-
-  request(options, function (err, res, body) {
-    if (err) {
-      callback(err);
-    } else {
-      if (res.statusCode === 201) {
-        callback(null, { status: 'Send request created, but email confirmation is required' });
-      } else if (res.statusCode === 202) {
-        callback(null, { transaction: res.headers.location });
-      } else {
-        callback(body);
-      }
-    }
-  });
+  this.createRecord(endpoint, params, timestamp, callback);
 };
 
 Buttercoin.prototype.sendBitcoin = Buttercoin.prototype.send;
@@ -443,6 +231,107 @@ Buttercoin.prototype.getUnauthenticated = function (url, callback) {
     } else {
       if (res.statusCode === 200) {
         callback(null, body);
+      } else {
+        callback(body);
+      }
+    }
+  });
+};
+
+Buttercoin.prototype.getRecords = function (endpoint, queryParams, timestamp, callback) {
+  // queryParams and timestamp are optional fields, so handle dynamic method parameters
+  if (typeof callback === 'undefined') {
+    if (typeof timestamp === 'undefined') {
+      callback = queryParams;
+      timestamp = undefined;
+      queryParams = undefined;
+    } else {
+      callback = timestamp;
+      if (+queryParams && isFinite(queryParams) && !(queryParams % 1)) {
+        timestamp = queryParams;
+        queryParams = undefined;
+      } else {
+        timestamp = undefined;
+      }
+    }
+  }
+
+  var options = this.buildRequest('GET', endpoint, timestamp, queryParams);
+
+  request(options, function (err, res, body) {
+    if (err) {
+      callback(err);
+    } else {
+      if (res.statusCode === 200) {
+        if (body.results)
+          callback(null, body.results);
+        else
+          callback({ errors: [{ message: UNEXPECTED_RESPONSE }]});
+      } else {
+        callback(body);
+      }
+    }
+  });
+};
+
+Buttercoin.prototype.getRecordById = function(endpoint, timestamp, callback) {
+  if (typeof callback === 'undefined') {
+    callback = timestamp;
+    timestamp = undefined;
+  }
+
+  var options = this.buildRequest('get', endpoint, timestamp);
+
+  request(options, function (err, res, body) {
+    if (err) {
+      callback(err);
+    } else {
+      if (res.statusCode === 200) {
+        callback(null, body);
+      } else {
+        callback(body);
+      }
+    }
+  });
+};
+
+Buttercoin.prototype.createRecord = function(endpoint, body, timestamp, callback) {
+  if (typeof callback === 'undefined') {
+    callback = timestamp;
+    timestamp = undefined;
+  }
+
+  var options = this.buildRequest('POST', endpoint, timestamp, body);
+
+  request(options, function (err, res, body) {
+    if (err) {
+      callback(err);
+    } else {
+      if (res.statusCode === 201) {
+        callback(null, { status: 201, message: 'This operation requires email confirmation' });
+      } else if (res.statusCode === 202) {
+        callback(null, { status: 202, transaction: res.headers.location });
+      } else {
+        callback(body);
+      }
+    }
+  });
+};
+
+Buttercoin.prototype.cancelRecord = function(endpoint, timestamp, callback) {
+  if (typeof callback === 'undefined') {
+    callback = timestamp;
+    timestamp = undefined;
+  }
+
+  var options = this.buildRequest('DELETE', endpoint, timestamp);
+
+  request(options, function (err, res, body) {
+    if (err) {
+      callback(err);
+    } else {
+      if (res.statusCode === 204) {
+        callback(null, { status: 204, message: 'This operation has completed successfully' });
       } else {
         callback(body);
       }
