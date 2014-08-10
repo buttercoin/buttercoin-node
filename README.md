@@ -330,7 +330,7 @@ The aim is to take your great ideas and make everyone's experience using Butterc
 
 - Fixed issue with self not defined
 
-### 0.0.6
+### 0.0.7
 
 - Made timestamp an optional parameter (will default to current timestamp)
 - Made getOrders and getTransactions query params optional
