@@ -19,7 +19,7 @@ Setting | Property Name | Description
 --- | --- | ---
 Public Key | `publicKey` | Your Buttercoin API Public Key  
 Secret Key | `secretKey` | Your Buttercoin API Secret Key  
-Environment | `environment` | Your development environment (default: `'production'`, set to `'staging'` to test with testnet bitcoins)
+Environment | `environment` | Your development environment (default: `'production'`, set to `'sandbox'` to test with testnet bitcoins)
 API Version | `version` | The API Version.  Currently used to version the API URL and Service Description
 
 ```javascript
