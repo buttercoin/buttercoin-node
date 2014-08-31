@@ -19,7 +19,7 @@ Setting | Property Name | Description
 --- | --- | ---
 Public Key | `publicKey` | Your Buttercoin API Public Key  
 Secret Key | `secretKey` | Your Buttercoin API Secret Key  
-Environment | `environment` | Your development environment (default: `'production'`, set to `'staging'` to test with testnet bitcoins)
+Environment | `environment` | Your development environment (default: `'production'`, set to `'sandbox'` to test with testnet bitcoins)
 API Version | `version` | The API Version.  Currently used to version the API URL and Service Description
 
 ```javascript
@@ -334,6 +334,9 @@ The aim is to take your great ideas and make everyone's experience using Butterc
 
 - Made timestamp an optional parameter (will default to current timestamp)
 - Made getOrders and getTransactions query params optional
+
+### 0.0.8
+- Changed test env to sandbox.buttercoin.com
 
 ## License
 

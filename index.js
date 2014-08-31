@@ -12,8 +12,8 @@ module.exports = function (api_key, api_secret, mode, version) {
     throw new Error('API Secret parameter must be specified and be of length 32 characters');
 
   var api_url = 'https://api.buttercoin.com';
-  if (mode === "staging") {
-		api_url = 'https://api.qa.dcxft.com';
+  if (mode === "sandbox" || mode === "staging") {
+	  api_url = 'https://sandbox.buttercoin.com';
   }
   return new Buttercoin(api_key, api_secret, api_url, version);
 };
@@ -310,7 +310,7 @@ Buttercoin.prototype.createRecord = function(endpoint, body, timestamp, callback
       if (res.statusCode === 201) {
         callback(null, { status: 201, message: 'This operation requires email confirmation' });
       } else if (res.statusCode === 202) {
-        callback(null, { status: 202, transaction: res.headers.location });
+        callback(null, { status: 202, url: res.headers.location });
       } else {
         callback(body);
       }
