@@ -106,17 +106,17 @@ client.getOrders(orderParams, new Date().getTime(), function (err, orders) {
 // single order by id
 var orderId = '<order_id>';
 
-client.getOrderById(orderId, new Date().getTime(), function (err, orders) {
+client.getOrderById(orderId, new Date().getTime(), function (err, order) {
   console.log("order err", err);
-  console.log("single order", orders);
+  console.log("single order", order);
 });
 
 // single order by url
 var url = '<url>';
 
-client.getOrderByUrl(url, new Date().getTime(), function (err, orders) {
+client.getOrderByUrl(url, new Date().getTime(), function (err, order) {
   console.log("order err", err);
-  console.log("single order", orders);
+  console.log("single order", order);
 });
 ```
 
@@ -175,6 +175,16 @@ Return the current bid, ask, and last sell prices on the Buttercoin platform
 client.getTicker(function (err, ticker) {
   console.log("ticker err", err);
   console.log("ticker", ticker);
+});
+```
+
+**Get Trade History**  
+Return the last 100 trades
+
+```javascript
+client.getTradeHistory(function (err, trades) {
+  console.log("trades err", err);
+  console.log("trades", trades);
 });
 ```
 
@@ -313,30 +323,33 @@ The aim is to take your great ideas and make everyone's experience using Butterc
 
 ## Release History
 
-### 0.0.1
+### 0.0.9
+- Added trade history endpoint
 
-- First release.
-
-### 0.0.2
-
-- Added support for unauthenticated requests
-- Fixed README format and accuracy
-
-### 0.0.3
-
-- Fixed issue with orderbook returning null
-
-### 0.0.4
-
-- Fixed issue with self not defined
+### 0.0.8
+- Changed test env to sandbox.buttercoin.com
 
 ### 0.0.7
 
 - Made timestamp an optional parameter (will default to current timestamp)
 - Made getOrders and getTransactions query params optional
 
-### 0.0.8
-- Changed test env to sandbox.buttercoin.com
+### 0.0.4
+
+- Fixed issue with self not defined
+
+### 0.0.3
+
+- Fixed issue with orderbook returning null
+
+### 0.0.2
+
+- Added support for unauthenticated requests
+- Fixed README format and accuracy
+
+### 0.0.1
+
+- First release.
 
 ## License
 
