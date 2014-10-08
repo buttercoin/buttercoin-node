@@ -220,6 +220,11 @@ Buttercoin.prototype.getTicker = function (callback) {
   this.getUnauthenticated(url, callback);
 };
 
+Buttercoin.prototype.getTradeHistory = function (callback) {
+  var url = this.buildUrl('trades');
+  this.getUnauthenticated(url, callback);
+};
+
 Buttercoin.prototype.getUnauthenticated = function (url, callback) {
   request.get({
     url: url,
