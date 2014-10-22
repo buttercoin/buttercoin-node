@@ -220,6 +220,8 @@ client.createOrder(order, new Date().getTime(), function (err, order) {
 
 **Create Transaction**  
 
+_Please contact Buttercoin support before creating a USD deposit using the API_
+
 Deposit transaction params include:  
 
 Name | Param | Description
