@@ -18,7 +18,7 @@ module.exports = function (api_key, api_secret, mode, version) {
     var protocol = mode.protocol || "https";
     var port = "";
     if(mode.port) { port = ":" + mode.port; }
-    api_url = protocol + "://" + host + port;
+    api_url = protocol + "://" + mode.host + port;
   }
   return new Buttercoin(api_key, api_secret, api_url, version);
 };

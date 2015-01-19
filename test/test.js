@@ -1,5 +1,12 @@
 var should = require('should');
 
+function clientWithMode(mode) {
+  return require('../')(
+      'abcdefghijklmnopqrstuvwxyz123457',
+      'abcdefghijklmnopqrstuvwxyz123456',
+      mode);
+}
+
 describe("Buttercoin", function () {
   var buttercoin, api_key, api_secret, mode, version;
 
@@ -63,12 +70,17 @@ describe("Buttercoin", function () {
     });
 
     it("should point to staging if mode is not production", function () {
-      buttercoin = require('../')('abcdefghijklmnopqrstuvwxyz123456', 'abcdefghijklmnopqrstuvwxyz123456', 'staging');
+      buttercoin = clientWithMode('staging');
       buttercoin.apiUrl.should.equal('https://sandbox.buttercoin.com');
     });
 
+    it("should allow for the specificatoin of a custom endpoint", function() {
+      buttercoin = clientWithMode({protocol: 'http', host: 'localhost', port: 1234});
+      buttercoin.apiUrl.should.equal('http://localhost:1234');
+    });
+
     it("should build a url correctly with the given endpoint, sign the url and build the headers", function () {
-      buttercoin = require('../')('abcdefghijklmnopqrstuvwxyz123457', 'abcdefghijklmnopqrstuvwxyz123456', 'production');
+      buttercoin = clientWithMode('production');
       var url = buttercoin.buildUrl('key');
       url.should.equal('https://api.buttercoin.com/v1/key');
 
