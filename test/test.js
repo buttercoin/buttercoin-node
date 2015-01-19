@@ -102,11 +102,11 @@ describe("Buttercoin", function () {
       var body = { 'testParam': 'testVal' };
 
       options = buttercoin.buildRequest(method, endpoint, timestamp, body);
-      options['headers']['X-Buttercoin-Access-Key'].should.equal('abcdefghijklmnopqrstuvwxyz123457');
-      options['headers']['X-Buttercoin-Signature'].should.equal('M0cug9fN1vRh+eECgBz+bTRhu1u/A7Mgm5cpHPKwWIU=');
-      options['headers']['X-Buttercoin-Date'].should.equal('1403558182457');
-      options['qs'].should.equal(body);
-      options['json'].should.equal(true);
+      options.headers['X-Buttercoin-Access-Key'].should.equal('abcdefghijklmnopqrstuvwxyz123457');
+      options.headers['X-Buttercoin-Signature'].should.equal('M0cug9fN1vRh+eECgBz+bTRhu1u/A7Mgm5cpHPKwWIU=');
+      options.headers['X-Buttercoin-Date'].should.equal('1403558182457');
+      options.qs.should.equal(body);
+      options.json.should.equal(true);
     });
 
     it("should build the correct options headers based on post method type", function () {
@@ -117,11 +117,11 @@ describe("Buttercoin", function () {
       var body = { 'testParam': 'testVal' };
 
       options = buttercoin.buildRequest(method, endpoint, timestamp, body);
-      options['headers']['X-Buttercoin-Access-Key'].should.equal('abcdefghijklmnopqrstuvwxyz123457');
-      options['headers']['X-Buttercoin-Signature'].should.equal('KuGR55mSi+OiF6NOu7UG1lgVV7XTMc91IpUuCRdczr4=');
-      options['headers']['X-Buttercoin-Date'].should.equal('1403558182457');
+      options.headers['X-Buttercoin-Access-Key'].should.equal('abcdefghijklmnopqrstuvwxyz123457');
+      options.headers['X-Buttercoin-Signature'].should.equal('KuGR55mSi+OiF6NOu7UG1lgVV7XTMc91IpUuCRdczr4=');
+      options.headers['X-Buttercoin-Date'].should.equal('1403558182457');
       options.hasOwnProperty('qs').should.equal(false);
-      options['json'].should.equal(body);
+      options.json.should.equal(body);
     });
 
     it("should build the correct options headers based on post method type", function () {
@@ -132,11 +132,11 @@ describe("Buttercoin", function () {
       var body = { 'testParam': 'testVal' };
 
       options = buttercoin.buildRequest(method, endpoint, timestamp, body);
-      options['headers']['X-Buttercoin-Access-Key'].should.equal('abcdefghijklmnopqrstuvwxyz123457');
-      options['headers']['X-Buttercoin-Signature'].should.equal('rI9nSlbev0b+wY+qge38n72bGi6RolaLLZ0fnVEiVGM=');
-      options['headers']['X-Buttercoin-Date'].should.equal('1403558182457');
+      options.headers['X-Buttercoin-Access-Key'].should.equal('abcdefghijklmnopqrstuvwxyz123457');
+      options.headers['X-Buttercoin-Signature'].should.equal('rI9nSlbev0b+wY+qge38n72bGi6RolaLLZ0fnVEiVGM=');
+      options.headers['X-Buttercoin-Date'].should.equal('1403558182457');
       options.hasOwnProperty('qs').should.equal(false);
-      options['json'].should.equal(true);
+      options.json.should.equal(true);
     });
   });
 });
