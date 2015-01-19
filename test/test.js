@@ -75,8 +75,18 @@ describe("Buttercoin", function () {
     });
 
     it("should allow for the specificatoin of a custom endpoint", function() {
-      buttercoin = clientWithMode({protocol: 'http', host: 'localhost', port: 1234});
+      buttercoin = clientWithMode({
+        protocol: 'http', host: 'localhost', port: 1234,
+        headers: { 'X-Forwarded-For': "127.0.0.1"}
+      });
+
+      var url = buttercoin.buildUrl('key');
+      var timestamp = '1403558182457';
+      var signature = buttercoin.signUrl(url, timestamp);
       buttercoin.apiUrl.should.equal('http://localhost:1234');
+
+      var headers = buttercoin.getHeaders(signature, timestamp);
+      headers['X-Forwarded-For'].should.equal("127.0.0.1");
     });
 
     it("should build a url correctly with the given endpoint, sign the url and build the headers", function () {

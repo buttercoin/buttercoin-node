@@ -8,12 +8,14 @@
     "email": "bennett@buttercoin.com"
   },
   "contributors": [
-  {
-    "name": "Kevin Adams",
-    "email": "kevin@buttercoin.com" },
-  {
-    "name": "Bennett Hoffman",
-    "email": "bennett@buttercoin.com" }
+    {
+      "name": "Kevin Adams",
+      "email": "kevin@buttercoin.com"
+    },
+    {
+      "name": "Bennett Hoffman",
+      "email": "bennett@buttercoin.com"
+    }
   ],
   "bugs": {
     "url": "https://github.com/buttercoin/buttercoinsdk-node/issues"
@@ -39,8 +41,9 @@
     "btc"
   ],
   "dependencies": {
-    "request": "~2.36.0",
-    "qs": "~0.6.6"
+    "merge": "^1.2.0",
+    "qs": "~0.6.6",
+    "request": "~2.36.0"
   },
   "devDependencies": {
     "mocha": "~1.20.1",

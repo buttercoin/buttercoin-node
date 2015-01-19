@@ -1,8 +1,15 @@
 var request = require('request');
 var crypto = require('crypto');
 var qs = require('qs');
+var merge = require('merge');
 
 var UNEXPECTED_RESPONSE = 'Unexpected response format.  You might be using the wrong version of the API, or Buttercoin might be MESSING up.';
+
+var environments = {
+  production: { host: "api.buttercoin.com" },
+  sandbox: { host: "sandbox.buttercoin.com" },
+  staging: { host: "sandbox.buttercoin.com" }
+};
 
 module.exports = function (api_key, api_secret, mode, version) {
   if (!api_key || api_key.length !== 32)
@@ -11,22 +18,28 @@ module.exports = function (api_key, api_secret, mode, version) {
   if (!api_secret || api_secret.length !== 32)
     throw new Error('API Secret parameter must be specified and be of length 32 characters');
 
-  var api_url = 'https://api.buttercoin.com';
-  if (mode === "sandbox" || mode === "staging") {
-    api_url = 'https://sandbox.buttercoin.com';
-  } else if (mode !== null && typeof(mode) === 'object' && mode.host) {
+  var api_url;
+  var headers;
+
+  if (environments[mode]) { mode = environments[mode]; }
+  if (mode !== null && typeof(mode) === 'object' && mode.host) {
     var protocol = mode.protocol || "https";
     var port = "";
     if(mode.port) { port = ":" + mode.port; }
     api_url = protocol + "://" + mode.host + port;
+    headers = mode.headers || {};
+  } else {
+    throw ("Invalid mode: " + mode);
   }
-  return new Buttercoin(api_key, api_secret, api_url, version);
+
+  return new Buttercoin(api_key, api_secret, api_url, headers, version);
 };
 
-function Buttercoin (api_key, api_secret, api_url, version) {
+function Buttercoin (api_key, api_secret, api_url, headers, version) {
   this.apiKey = api_key;
   this.apiSecret = api_secret;
   this.version = version || "v1"; // default to latest API version as of this Client release
+  this.headers = headers || {};
   this.apiUrl = api_url;
 }
 
@@ -41,14 +54,13 @@ Buttercoin.prototype.signUrl = function (urlString, timestamp) {
 };
 
 Buttercoin.prototype.getHeaders = function (signature, timestamp) {
-	var headers = {};
+  var headers = merge(true, this.headers);
   if (signature) {
-		headers = {
-			'X-Buttercoin-Access-Key': this.apiKey,
-			'X-Buttercoin-Signature': signature,
-			'X-Buttercoin-Date': timestamp
-		};
-	}
+    headers['X-Buttercoin-Access-Key'] = this.apiKey;
+    headers['X-Buttercoin-Signature'] = signature;
+    headers['X-Buttercoin-Date'] = timestamp;
+  }
+
   return headers;
 };
 
