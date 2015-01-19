@@ -64,7 +64,7 @@ describe("Buttercoin", function () {
 
     it("should point to staging if mode is not production", function () {
       buttercoin = require('../')('abcdefghijklmnopqrstuvwxyz123456', 'abcdefghijklmnopqrstuvwxyz123456', 'staging');
-      buttercoin.apiUrl.should.equal('https://api.qa.dcxft.com');
+      buttercoin.apiUrl.should.equal('https://sandbox.buttercoin.com');
     });
 
     it("should build a url correctly with the given endpoint, sign the url and build the headers", function () {
