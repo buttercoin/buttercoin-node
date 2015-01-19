@@ -246,7 +246,8 @@ Buttercoin.prototype.getUnauthenticated = function (url, callback) {
   request.get({
     url: url,
     json: true,
-    strictSSL: true
+    strictSSL: true,
+    headers: this.headers
   }, function (err, res, body) {
     if (err) {
       callback(err);
