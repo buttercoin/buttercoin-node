@@ -13,7 +13,12 @@ module.exports = function (api_key, api_secret, mode, version) {
 
   var api_url = 'https://api.buttercoin.com';
   if (mode === "sandbox" || mode === "staging") {
-	  api_url = 'https://sandbox.buttercoin.com';
+    api_url = 'https://sandbox.buttercoin.com';
+  } else if (mode !== null && typeof(mode) === 'object' && mode.host) {
+    var protocol = mode.protocol || "https";
+    var port = "";
+    if(mode.port) { port = ":" + mode.port; }
+    api_url = protocol + "://" + host + port;
   }
   return new Buttercoin(api_key, api_secret, api_url, version);
 };
@@ -49,7 +54,7 @@ Buttercoin.prototype.getHeaders = function (signature, timestamp) {
 
 Buttercoin.prototype.buildRequest = function (method, endpoint, timestamp, body) {
   if (typeof timestamp === 'undefined') { timestamp = new Date().getTime(); }
-  if (typeof body === 'undefined') { body = {} }
+  if (typeof body === 'undefined') { body = {}; }
   var url = this.buildUrl(endpoint);
   var options = {
     url: url,
@@ -59,18 +64,18 @@ Buttercoin.prototype.buildRequest = function (method, endpoint, timestamp, body)
   if (method === 'GET') {
     var paramString = (Object.getOwnPropertyNames(body).length === 0) ? '' : "?" + qs.stringify(body);
     signature = this.signUrl(url + paramString, timestamp);
-    options['qs'] = body;
-    options['json'] = true;
+    options.qs = body;
+    options.json = true;
   } else if (method === 'POST') {
     signature = this.signUrl(url + JSON.stringify(body), timestamp);
-    options['json'] = body;
+    options.json = body;
   } else {
     signature = this.signUrl(url, timestamp);
-    options['json'] = true;
+    options.json = true;
   }
-  options['method'] = method;
-  options['headers'] = this.getHeaders(signature, timestamp);
-  
+  options.method = method;
+  options.headers = this.getHeaders(signature, timestamp);
+
   return options;
 };
 
@@ -155,7 +160,7 @@ Buttercoin.prototype.getOrderById = function (orderId, timestamp, callback) {
   this.getRecordById(endpoint, timestamp, callback);
 };
 
-Buttercoin.prototype.getOrder = Buttercoin.prototype.getOrderById
+Buttercoin.prototype.getOrder = Buttercoin.prototype.getOrderById;
 
 Buttercoin.prototype.getOrderByUrl = function (url, timestamp, callback) {
   var orderId = url.substring(url.lastIndexOf('/')+1);
@@ -181,7 +186,7 @@ Buttercoin.prototype.getTransactionById = function (trxnId, timestamp, callback)
   this.getRecordById(endpoint, timestamp, callback);
 };
 
-Buttercoin.prototype.getTransaction = Buttercoin.prototype.getTransactionById
+Buttercoin.prototype.getTransaction = Buttercoin.prototype.getTransactionById;
 
 Buttercoin.prototype.getTransactionByUrl = function (url, timestamp, callback) {
   var trxnId = url.substring(url.lastIndexOf('/')+1);
