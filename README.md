@@ -325,6 +325,9 @@ The aim is to take your great ideas and make everyone's experience using Butterc
 
 ## Release History
 
+### 0.0.10
+- Added the ability to connect to a custom endpoint instead of just staging or production
+
 ### 0.0.9
 - Added trade history endpoint
 
