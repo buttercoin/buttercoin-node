@@ -17,9 +17,9 @@ npm install buttercoinsdk-node
 
 Setting | Property Name | Description
 --- | --- | ---
-Public Key | `publicKey` | Your Buttercoin API Public Key  
-Secret Key | `secretKey` | Your Buttercoin API Secret Key  
-Environment | `environment` | Your development environment (default: `'production'`, set to `'sandbox'` to test with testnet bitcoins)
+Public Key | `publicKey` | Your Buttercoin API Public Key
+Secret Key | `secretKey` | Your Buttercoin API Secret Key
+Environment | `environment` | Your development environment (default: `'production'`, set to `'sandbox'` to test with testnet bitcoins). You can set this to an object with `host`, `protocol` (defaults to `'https'`), `port` (defaults to empty), and `headers` (defaults to `[]`) for custom endpoints.
 API Version | `version` | The API Version.  Currently used to version the API URL and Service Description
 
 ```javascript

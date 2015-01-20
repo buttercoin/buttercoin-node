@@ -1,8 +1,15 @@
 var request = require('request');
 var crypto = require('crypto');
 var qs = require('qs');
+var merge = require('merge');
 
 var UNEXPECTED_RESPONSE = 'Unexpected response format.  You might be using the wrong version of the API, or Buttercoin might be MESSING up.';
+
+var environments = {
+  production: { host: "api.buttercoin.com" },
+  sandbox: { host: "sandbox.buttercoin.com" },
+  staging: { host: "sandbox.buttercoin.com" }
+};
 
 module.exports = function (api_key, api_secret, mode, version) {
   if (!api_key || api_key.length !== 32)
@@ -11,17 +18,28 @@ module.exports = function (api_key, api_secret, mode, version) {
   if (!api_secret || api_secret.length !== 32)
     throw new Error('API Secret parameter must be specified and be of length 32 characters');
 
-  var api_url = 'https://api.buttercoin.com';
-  if (mode === "sandbox" || mode === "staging") {
-	  api_url = 'https://sandbox.buttercoin.com';
+  var api_url;
+  var headers;
+
+  if (environments[mode]) { mode = environments[mode]; }
+  if (mode !== null && typeof(mode) === 'object' && mode.host) {
+    var protocol = mode.protocol || "https";
+    var port = "";
+    if(mode.port) { port = ":" + mode.port; }
+    api_url = protocol + "://" + mode.host + port;
+    headers = mode.headers || {};
+  } else {
+    throw ("Invalid mode: " + mode);
   }
-  return new Buttercoin(api_key, api_secret, api_url, version);
+
+  return new Buttercoin(api_key, api_secret, api_url, headers, version);
 };
 
-function Buttercoin (api_key, api_secret, api_url, version) {
+function Buttercoin (api_key, api_secret, api_url, headers, version) {
   this.apiKey = api_key;
   this.apiSecret = api_secret;
   this.version = version || "v1"; // default to latest API version as of this Client release
+  this.headers = headers || {};
   this.apiUrl = api_url;
 }
 
@@ -36,20 +54,19 @@ Buttercoin.prototype.signUrl = function (urlString, timestamp) {
 };
 
 Buttercoin.prototype.getHeaders = function (signature, timestamp) {
-	var headers = {};
+  var headers = merge(true, this.headers);
   if (signature) {
-		headers = {
-			'X-Buttercoin-Access-Key': this.apiKey,
-			'X-Buttercoin-Signature': signature,
-			'X-Buttercoin-Date': timestamp
-		};
-	}
+    headers['X-Buttercoin-Access-Key'] = this.apiKey;
+    headers['X-Buttercoin-Signature'] = signature;
+    headers['X-Buttercoin-Date'] = timestamp;
+  }
+
   return headers;
 };
 
 Buttercoin.prototype.buildRequest = function (method, endpoint, timestamp, body) {
   if (typeof timestamp === 'undefined') { timestamp = new Date().getTime(); }
-  if (typeof body === 'undefined') { body = {} }
+  if (typeof body === 'undefined') { body = {}; }
   var url = this.buildUrl(endpoint);
   var options = {
     url: url,
@@ -59,18 +76,18 @@ Buttercoin.prototype.buildRequest = function (method, endpoint, timestamp, body)
   if (method === 'GET') {
     var paramString = (Object.getOwnPropertyNames(body).length === 0) ? '' : "?" + qs.stringify(body);
     signature = this.signUrl(url + paramString, timestamp);
-    options['qs'] = body;
-    options['json'] = true;
+    options.qs = body;
+    options.json = true;
   } else if (method === 'POST') {
     signature = this.signUrl(url + JSON.stringify(body), timestamp);
-    options['json'] = body;
+    options.json = body;
   } else {
     signature = this.signUrl(url, timestamp);
-    options['json'] = true;
+    options.json = true;
   }
-  options['method'] = method;
-  options['headers'] = this.getHeaders(signature, timestamp);
-  
+  options.method = method;
+  options.headers = this.getHeaders(signature, timestamp);
+
   return options;
 };
 
@@ -155,7 +172,7 @@ Buttercoin.prototype.getOrderById = function (orderId, timestamp, callback) {
   this.getRecordById(endpoint, timestamp, callback);
 };
 
-Buttercoin.prototype.getOrder = Buttercoin.prototype.getOrderById
+Buttercoin.prototype.getOrder = Buttercoin.prototype.getOrderById;
 
 Buttercoin.prototype.getOrderByUrl = function (url, timestamp, callback) {
   var orderId = url.substring(url.lastIndexOf('/')+1);
@@ -181,7 +198,7 @@ Buttercoin.prototype.getTransactionById = function (trxnId, timestamp, callback)
   this.getRecordById(endpoint, timestamp, callback);
 };
 
-Buttercoin.prototype.getTransaction = Buttercoin.prototype.getTransactionById
+Buttercoin.prototype.getTransaction = Buttercoin.prototype.getTransactionById;
 
 Buttercoin.prototype.getTransactionByUrl = function (url, timestamp, callback) {
   var trxnId = url.substring(url.lastIndexOf('/')+1);
@@ -229,7 +246,8 @@ Buttercoin.prototype.getUnauthenticated = function (url, callback) {
   request.get({
     url: url,
     json: true,
-    strictSSL: true
+    strictSSL: true,
+    headers: this.headers
   }, function (err, res, body) {
     if (err) {
       callback(err);

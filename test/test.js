@@ -1,5 +1,12 @@
 var should = require('should');
 
+function clientWithMode(mode) {
+  return require('../')(
+      'abcdefghijklmnopqrstuvwxyz123457',
+      'abcdefghijklmnopqrstuvwxyz123456',
+      mode);
+}
+
 describe("Buttercoin", function () {
   var buttercoin, api_key, api_secret, mode, version;
 
@@ -63,12 +70,27 @@ describe("Buttercoin", function () {
     });
 
     it("should point to staging if mode is not production", function () {
-      buttercoin = require('../')('abcdefghijklmnopqrstuvwxyz123456', 'abcdefghijklmnopqrstuvwxyz123456', 'staging');
-      buttercoin.apiUrl.should.equal('https://api.qa.dcxft.com');
+      buttercoin = clientWithMode('staging');
+      buttercoin.apiUrl.should.equal('https://sandbox.buttercoin.com');
+    });
+
+    it("should allow for the specificatoin of a custom endpoint", function() {
+      buttercoin = clientWithMode({
+        protocol: 'http', host: 'localhost', port: 1234,
+        headers: { 'X-Forwarded-For': "127.0.0.1"}
+      });
+
+      var url = buttercoin.buildUrl('key');
+      var timestamp = '1403558182457';
+      var signature = buttercoin.signUrl(url, timestamp);
+      buttercoin.apiUrl.should.equal('http://localhost:1234');
+
+      var headers = buttercoin.getHeaders(signature, timestamp);
+      headers['X-Forwarded-For'].should.equal("127.0.0.1");
     });
 
     it("should build a url correctly with the given endpoint, sign the url and build the headers", function () {
-      buttercoin = require('../')('abcdefghijklmnopqrstuvwxyz123457', 'abcdefghijklmnopqrstuvwxyz123456', 'production');
+      buttercoin = clientWithMode('production');
       var url = buttercoin.buildUrl('key');
       url.should.equal('https://api.buttercoin.com/v1/key');
 
@@ -90,11 +112,11 @@ describe("Buttercoin", function () {
       var body = { 'testParam': 'testVal' };
 
       options = buttercoin.buildRequest(method, endpoint, timestamp, body);
-      options['headers']['X-Buttercoin-Access-Key'].should.equal('abcdefghijklmnopqrstuvwxyz123457');
-      options['headers']['X-Buttercoin-Signature'].should.equal('M0cug9fN1vRh+eECgBz+bTRhu1u/A7Mgm5cpHPKwWIU=');
-      options['headers']['X-Buttercoin-Date'].should.equal('1403558182457');
-      options['qs'].should.equal(body);
-      options['json'].should.equal(true);
+      options.headers['X-Buttercoin-Access-Key'].should.equal('abcdefghijklmnopqrstuvwxyz123457');
+      options.headers['X-Buttercoin-Signature'].should.equal('M0cug9fN1vRh+eECgBz+bTRhu1u/A7Mgm5cpHPKwWIU=');
+      options.headers['X-Buttercoin-Date'].should.equal('1403558182457');
+      options.qs.should.equal(body);
+      options.json.should.equal(true);
     });
 
     it("should build the correct options headers based on post method type", function () {
@@ -105,11 +127,11 @@ describe("Buttercoin", function () {
       var body = { 'testParam': 'testVal' };
 
       options = buttercoin.buildRequest(method, endpoint, timestamp, body);
-      options['headers']['X-Buttercoin-Access-Key'].should.equal('abcdefghijklmnopqrstuvwxyz123457');
-      options['headers']['X-Buttercoin-Signature'].should.equal('KuGR55mSi+OiF6NOu7UG1lgVV7XTMc91IpUuCRdczr4=');
-      options['headers']['X-Buttercoin-Date'].should.equal('1403558182457');
+      options.headers['X-Buttercoin-Access-Key'].should.equal('abcdefghijklmnopqrstuvwxyz123457');
+      options.headers['X-Buttercoin-Signature'].should.equal('KuGR55mSi+OiF6NOu7UG1lgVV7XTMc91IpUuCRdczr4=');
+      options.headers['X-Buttercoin-Date'].should.equal('1403558182457');
       options.hasOwnProperty('qs').should.equal(false);
-      options['json'].should.equal(body);
+      options.json.should.equal(body);
     });
 
     it("should build the correct options headers based on post method type", function () {
@@ -120,11 +142,11 @@ describe("Buttercoin", function () {
       var body = { 'testParam': 'testVal' };
 
       options = buttercoin.buildRequest(method, endpoint, timestamp, body);
-      options['headers']['X-Buttercoin-Access-Key'].should.equal('abcdefghijklmnopqrstuvwxyz123457');
-      options['headers']['X-Buttercoin-Signature'].should.equal('rI9nSlbev0b+wY+qge38n72bGi6RolaLLZ0fnVEiVGM=');
-      options['headers']['X-Buttercoin-Date'].should.equal('1403558182457');
+      options.headers['X-Buttercoin-Access-Key'].should.equal('abcdefghijklmnopqrstuvwxyz123457');
+      options.headers['X-Buttercoin-Signature'].should.equal('rI9nSlbev0b+wY+qge38n72bGi6RolaLLZ0fnVEiVGM=');
+      options.headers['X-Buttercoin-Date'].should.equal('1403558182457');
       options.hasOwnProperty('qs').should.equal(false);
-      options['json'].should.equal(true);
+      options.json.should.equal(true);
     });
   });
 });
