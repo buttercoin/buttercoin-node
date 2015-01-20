@@ -2,6 +2,7 @@ var request = require('request');
 var crypto = require('crypto');
 var qs = require('qs');
 var merge = require('merge');
+var Q = require('Q');
 
 var UNEXPECTED_RESPONSE = 'Unexpected response format.  You might be using the wrong version of the API, or Buttercoin might be MESSING up.';
 
@@ -41,6 +42,28 @@ function Buttercoin (api_key, api_secret, api_url, headers, version) {
   this.version = version || "v1"; // default to latest API version as of this Client release
   this.headers = headers || {};
   this.apiUrl = api_url;
+
+  this.Q = {
+    getBalances: Q.nbind(this.getBalances, this),
+    getTicker: Q.nbind(this.getTicker, this),
+    getTradeHistory: Q.nbind(this.getTradeHistory, this),
+    createOrder: Q.nbind(this.createOrder, this),
+    getKey: Q.nbind(this.getKey, this),
+    getDepositAddress: Q.nbind(this.getDepositAddress, this),
+    getOrderById: Q.nbind(this.getOrderById, this),
+    getOrder: Q.nbind(this.getOrder, this),
+    getOrders: Q.nbind(this.getOrders, this),
+    cancelOrder: Q.nbind(this.cancelOrder, this),
+    getTransactionById: Q.nbind(this.getTransactionById, this),
+    getTransaction: Q.nbind(this.getTransaction, this),
+    getTransactions: Q.nbind(this.getTransactions, this),
+    getTransactionByUrl: Q.nbind(this.getTransactionByUrl, this),
+    cancelTransaction: Q.nbind(this.cancelTransaction, this),
+    createDeposit: Q.nbind(this.createDeposit, this),
+    createWithdrawal: Q.nbind(this.createWithdrawal, this),
+    send: Q.nbind(this.send, this),
+    sendBitcoin: Q.nbind(this.sendBitcoin, this)
+  };
 }
 
 Buttercoin.prototype.buildUrl = function (endpoint) {
