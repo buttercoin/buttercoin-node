@@ -1,6 +1,7 @@
+should = require("should")
+
 clientWithMode = (mode) ->
   require("../").withApiKey "abcdefghijklmnopqrstuvwxyz123457", "abcdefghijklmnopqrstuvwxyz123456", mode
-should = require("should")
 describe "Buttercoin", ->
   buttercoin = undefined
   api_key = undefined
