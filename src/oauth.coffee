@@ -1,6 +1,6 @@
 URL = require('url')
 
-authUrl = (endpoint, client_id, redirect_uri, scope, state) ->
+module.exports.authUrl = (endpoint, client_id, redirect_uri, scope, state) ->
   endpoint.formatUrl
     pathname: '/oauth/auth'
     query:
