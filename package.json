@@ -21,7 +21,7 @@
     "url": "https://github.com/buttercoin/buttercoinsdk-node/issues"
   },
   "license": "MIT",
-  "main": "index.js",
+  "main": "lib/index.js",
   "directories": {
     "test": "tests"
   },
