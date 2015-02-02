@@ -19,3 +19,11 @@ describe "Endpoint", ->
         foo: 'bar'
     url.should.equal 'https://api.buttercoin.com/test/url?foo=bar'
 
+  it "should be able to create a custom url", ->
+    e = new Endpoint
+      host: "localhost"
+      protocol: "http"
+      port: "9003"
+
+    url = e.formatUrl(pathname: '/test/url')
+    url.should.equal 'http://localhost:9003/test/url'

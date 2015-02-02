@@ -5,11 +5,6 @@ merge = require("merge")
 
 UNEXPECTED_RESPONSE = "Unexpected response format.  You might be using the wrong version of the API, or Buttercoin might be MESSING up."
 
-endpoints =
-  production: { host: "api.buttercoin.com" }
-  sandbox: { host: "sandbox.buttercoin.com" }
-  staging: { host: "sandbox.buttercoin.com" }
-
 initWithApiCredentials = (api_key, api_secret, endpoint, version) ->
   throw new Error("API Key parameter must be specified and be of length 32 characters")  if not api_key or api_key.length isnt 32
   throw new Error("API Secret parameter must be specified and be of length 32 characters")  if not api_secret or api_secret.length isnt 32

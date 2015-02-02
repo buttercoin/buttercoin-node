@@ -5,17 +5,22 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     coffee:{
-      dev:{
-        files:{
-          'lib/*.js': 'src/*.coffee'
-        }
+      compile: {
+        expand: true,
+        flatten: false,
+        cwd: 'src/',
+        src: ['*.coffee', '**/*.coffee'],
+        dest: 'lib/',
+        ext: '.js'
       },
+
       test:{
         files:{
           'test/*.js': 'test/*.coffee'
         }
       }
     },
+
     mochaTest: {
       test: {
         options: {
@@ -32,7 +37,7 @@ module.exports = function(grunt) {
           spawn: false,
         },
         files: '**/*.coffee',
-        tasks: ['default']
+        tasks: ['coffee:compile', 'default']
       }
     }
   });
