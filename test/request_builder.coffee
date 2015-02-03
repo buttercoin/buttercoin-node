@@ -1,5 +1,7 @@
 should = require('should')
+expect = require('expect')
 RequestBuilder = require('../lib/request_builder')
+Order = require('../lib/requests/create_order')
 Endpoint = require('../lib/endpoint')
 
 describe 'RequestBuilder', ->
@@ -32,9 +34,13 @@ describe 'RequestBuilder', ->
       req = builder.getBalances()
       req.url.should.equal 'https://www-sandbox.buttercoin.com/v1/account/balances'
 
-    it 'should support POST /orders', ->
-      req = builder.createOrder({})
-      req.method.should.equal 'POST'
-      req.url.should.equal 'https://www-sandbox.buttercoin.com/v1/orders'
-      JSON.stringify(req.body).should.equal "{}"
+    describe 'RequestBuilder#createOrder', ->
+      it 'should reject bad arguments', ->
+        (-> builder.createOrder("foo")).should.throw('Invalid argument to createOrder: foo')
+
+      it 'should work with an Order argument', ->
+        req = builder.createOrder(Order::marketBid(100))
+        req.method.should.equal 'POST'
+        req.url.should.equal 'https://www-sandbox.buttercoin.com/v1/orders'
+        JSON.stringify(req.body).should.equal '{"instrument":"USD_BTC","side":"sell","orderType":"market","quantity":100}'
 

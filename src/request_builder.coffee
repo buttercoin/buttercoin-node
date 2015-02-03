@@ -1,4 +1,5 @@
 Endpoint = require('./endpoint')
+Order = require ('./requests/create_order')
 
 module.exports = class RequestBuilder
   @defaultVersion = 'v1'
@@ -11,8 +12,11 @@ module.exports = class RequestBuilder
   getBalances: () =>
     @buildRequest('GET', 'account/balances')
 
-  createOrder: (options) =>
-    @buildRequest('POST', 'orders', options)
+  createOrder: (order) =>
+    unless order instanceof Order
+      throw new Error("Invalid argument to createOrder: #{order}")
+
+    @buildRequest('POST', 'orders', order)
 
   buildRequest: (method, path, body) =>
     req =
