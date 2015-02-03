@@ -1,14 +1,14 @@
-Buttercoin Node SDK Client
-===============
+Buttercoin API Node.js Client
+=============================
 
-Official Node Client of the Buttercoin API.  Buttercoin is a trading platform that makes buying and selling bitcoin easy.
+Official Node.js Client of the Buttercoin API.  Buttercoin is a trading platform that makes buying and selling bitcoin easy.
 
 ## Getting Started
 
 Use npm to install
 
 ```javascript
-npm install buttercoinsdk-node
+npm install buttercoin-node
 ```
 
 ## Examples
@@ -315,7 +315,7 @@ client.cancelTransaction(trxnId, new Date().getTime(), function (err, msg) {
 ## Further Reading
 
 [Buttercoin - Website](https://www.buttercoin.com)  
-[Buttercoin API Docs](https://developer.buttercoin.com)
+[Buttercoin API Documentation](https://developer.buttercoin.com)
 
 ## Contributing
 
@@ -325,35 +325,18 @@ The aim is to take your great ideas and make everyone's experience using Butterc
 
 ## Release History
 
-### 0.0.10
+### 1.0.0
 - Added the ability to connect to a custom endpoint instead of just staging or production
 
-### 0.0.9
+### Prereleases
 - Added trade history endpoint
-
-### 0.0.8
 - Changed test env to sandbox.buttercoin.com
-
-### 0.0.7
-
 - Made timestamp an optional parameter (will default to current timestamp)
 - Made getOrders and getTransactions query params optional
-
-### 0.0.4
-
 - Fixed issue with self not defined
-
-### 0.0.3
-
 - Fixed issue with orderbook returning null
-
-### 0.0.2
-
 - Added support for unauthenticated requests
 - Fixed README format and accuracy
-
-### 0.0.1
-
 - First release.
 
 ## License
