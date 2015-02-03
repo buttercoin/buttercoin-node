@@ -1,4 +1,4 @@
-Buttercoin API Node.js Client
+Buttercoin API Node.js Client [![Build Status](https://travis-ci.org/buttercoin/buttercoin-node.svg?branch=master)](https://travis-ci.org/buttercoin/buttercoin-node)
 =============================
 
 Official Node.js Client of the Buttercoin API.  Buttercoin is a trading platform that makes buying and selling bitcoin easy.
