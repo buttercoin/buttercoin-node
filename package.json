@@ -15,6 +15,10 @@
     {
       "name": "Bennett Hoffman",
       "email": "bennett@buttercoin.com"
+    },
+    {
+      "name": "Mathias Bogaert",
+      "email": "mathias@buttercoin.com"
     }
   ],
   "bugs": {
@@ -42,8 +46,8 @@
   ],
   "dependencies": {
     "merge": "^1.2.0",
-    "qs": "~0.6.6",
-    "request": "~2.36.0"
+    "qs": "~2.3.3",
+    "request": "~2.53.0"
   },
   "devDependencies": {
     "mocha": "~1.20.1",
