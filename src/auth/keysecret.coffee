@@ -24,7 +24,7 @@ class KeySecretAuthorizer
 
   authorize: (request, timestamp) =>
     if request._auth
-      timestamp ?= (new Date).getTime
+      timestamp ?= (new Date).getTime()
       signature = @sign(timestamp + @stringToSign(request), @secret)
 
       request.headers ?= {}

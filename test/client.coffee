@@ -26,8 +26,17 @@ describe 'Buttercoin client', ->
       client.should.be.an.instanceOf Buttercoin
       client.auth.constructor.name.should.equal 'OAuth2Authorizer'
       client.auth.tokenProvider.should.equal testProvider
+      client.handler.do.should.be.type 'function'
 
-    it 'should construct an API key client'
+    it 'should construct an API key client', ->
+      k = 'abcdefghijklmnopqrstuvwxyz123456'
+      s = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+      client = Buttercoin::withKeySecret(k, s)
+      client.should.be.an.instanceOf Buttercoin
+      client.auth.constructor.name.should.equal 'KeySecretAuthorizer'
+      client.auth.key.should.equal k
+      client.auth.secret.should.equal s
+      client.handler.do.should.be.type 'function'
 
   describe 'operations', ->
     client = Buttercoin::testClient()

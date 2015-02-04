@@ -31,6 +31,10 @@ describe 'RequestBuilder', ->
       req.strictSSL.should.equal false
       req._auth.should.equal true
 
+    it 'should work with a leading slash on the path', ->
+      req = builder.buildRequest('GET', '/some/api/path')
+      req.url.should.equal 'https://sandbox.buttercoin.com/v1/some/api/path'
+
     it 'should be able to specify auth options', ->
       req = builder.buildRequest('GET', 'some/api/path', auth: false)
       req._auth.should.equal false

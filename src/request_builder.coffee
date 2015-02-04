@@ -9,6 +9,8 @@ module.exports = class RequestBuilder
     @endpoint = RequestBuilder.defaultEndpoint unless(@endpoint?)
 
   buildRequest: (method, path, options) =>
+    path = path.substring(1) if path[0] is '/'
+
     req =
       method: method
       url: @endpoint.formatUrl(pathname: "#{@version}/#{path}")

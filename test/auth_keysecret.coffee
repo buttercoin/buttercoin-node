@@ -56,7 +56,10 @@ describe 'Buttercoin key/secret authorizer', ->
       auth.stringToSign(req).should.equal(
         'https://sandbox.buttercoin.com/v1/account/balances?foo=bar&x=1')
 
-    it 'should produce signing strings w/ body for POST requests'
+    it 'should produce signing strings w/ body for POST requests', ->
+      req = builder.buildRequest('POST', 'orders', body: {foo: 'bar', x: 3})
+      auth.stringToSign(req).should.equal(
+        'https://sandbox.buttercoin.com/v1/orders{"foo":"bar","x":3}')
 
   describe 'authenticated requests', ->
     it 'should add signing headers to an authenticated requests', ->
@@ -72,7 +75,12 @@ describe 'Buttercoin key/secret authorizer', ->
       req.headers['X-Buttercoin-Signature'].should.equal expected
       req.headers['X-Buttercoin-Date'].should.equal timestamp
 
-    it 'should calculate a timestamp if one is not provided'
+    it 'should calculate a timestamp if one is not provided', ->
+      early = (new Date).getTime()
+      req = auth.authorize(builder.buildRequest('GET', '/'))
+      req.headers['X-Buttercoin-Date'].should.be.type 'number'
+      req.headers['X-Buttercoin-Date'].should.equal early # TODO - should strictly be >=
+
     it 'should not add signing headers to an unauthenticated request', ->
       req = auth.authorize({_auth: false})
       should.not.exist(req.headers?['X-Buttercoin-Access-Key'])
