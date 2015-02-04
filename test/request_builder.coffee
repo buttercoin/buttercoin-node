@@ -29,10 +29,31 @@ describe 'RequestBuilder', ->
       req.method.should.equal 'POST'
       req.url.should.equal 'http://localhost:9003/v2/do/a/thing'
       req.strictSSL.should.equal false
+      req._auth.should.equal true
+
+    it 'should be able to specify auth options', ->
+      req = builder.buildRequest('GET', 'some/api/path', auth: false)
+      req._auth.should.equal false
+
+    it 'should support GET /orderbook', ->
+      req = builder.getOrderbook()
+      req.url.should.equal 'https://www-sandbox.buttercoin.com/v1/orderbook'
+      req._auth.should.equal false
+
+    it 'should support GET /trades', ->
+      req = builder.getTradeHistory()
+      req.url.should.equal 'https://www-sandbox.buttercoin.com/v1/trades'
+      req._auth.should.equal false
+
+    it 'should support GET /orderbook', ->
+      req = builder.getTicker()
+      req.url.should.equal 'https://www-sandbox.buttercoin.com/v1/ticker'
+      req._auth.should.equal false
 
     it 'should support GET /account/balances', ->
       req = builder.getBalances()
       req.url.should.equal 'https://www-sandbox.buttercoin.com/v1/account/balances'
+      req._auth.should.equal true
 
     describe 'RequestBuilder#createOrder', ->
       it 'should reject bad arguments', ->
@@ -42,5 +63,6 @@ describe 'RequestBuilder', ->
         req = builder.createOrder(Order::marketBid(100))
         req.method.should.equal 'POST'
         req.url.should.equal 'https://www-sandbox.buttercoin.com/v1/orders'
+        req._auth.should.equal true
         JSON.stringify(req.body).should.equal '{"instrument":"USD_BTC","side":"sell","orderType":"market","quantity":100}'
 
