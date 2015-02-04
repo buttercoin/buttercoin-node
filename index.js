@@ -3,7 +3,7 @@ var crypto = require('crypto');
 var qs = require('qs');
 var merge = require('merge');
 
-var UNEXPECTED_RESPONSE = 'Unexpected response format.  You might be using the wrong version of the API, or Buttercoin might be MESSING up.';
+var UNEXPECTED_RESPONSE = 'Unexpected response format. You might be using the wrong version of the API, or this API Client is out of date.';
 
 var environments = {
   production: { host: "api.buttercoin.com" },
