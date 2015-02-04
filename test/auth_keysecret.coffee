@@ -79,7 +79,7 @@ describe 'Buttercoin key/secret authorizer', ->
       early = (new Date).getTime()
       req = auth.authorize(builder.buildRequest('GET', '/'))
       req.headers['X-Buttercoin-Date'].should.be.type 'number'
-      req.headers['X-Buttercoin-Date'].should.equal early # TODO - should strictly be >=
+      req.headers['X-Buttercoin-Date'].should.be.greaterThan (early - 1)
 
     it 'should not add signing headers to an unauthenticated request', ->
       req = auth.authorize({_auth: false})
