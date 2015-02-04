@@ -8,8 +8,8 @@ describe "Endpoint", ->
 
   it "should have defaults for production and sandbox/staging", ->
     Endpoint.defaults.production.host.should.equal 'api.buttercoin.com'
-    Endpoint.defaults.staging.host.should.equal 'www-sandbox.buttercoin.com'
-    Endpoint.defaults.sandbox.host.should.equal 'www-sandbox.buttercoin.com'
+    Endpoint.defaults.staging.host.should.equal 'sandbox.buttercoin.com'
+    Endpoint.defaults.sandbox.host.should.equal 'sandbox.buttercoin.com'
 
   it "should be able to format a url", ->
     e = Endpoint.defaults.production

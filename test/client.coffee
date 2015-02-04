@@ -9,10 +9,14 @@ class NoopAuthorizer
     @lastRequest = request
     request
 
+class NoopHandler
+  do: (request, opts) ->
+
 Buttercoin::testClient = () ->
   new Buttercoin(
     new RequestBuilder(),
-    new NoopAuthorizer())
+    new NoopAuthorizer(),
+    new NoopHandler())
 
 describe 'Buttercoin client', ->
   describe 'constructor methods', ->
@@ -32,28 +36,28 @@ describe 'Buttercoin client', ->
       client.getOrderBook()
       req = client.auth.lastRequest
       req.method.should.equal 'GET'
-      req.url.should.equal 'https://www-sandbox.buttercoin.com/v1/orderbook'
+      req.url.should.equal 'https://sandbox.buttercoin.com/v1/orderbook'
       req._auth.should.equal false
 
     it 'should support getting trade history', ->
       client.getTradeHistory()
       req = client.auth.lastRequest
       req.method.should.equal 'GET'
-      req.url.should.equal 'https://www-sandbox.buttercoin.com/v1/trades'
+      req.url.should.equal 'https://sandbox.buttercoin.com/v1/trades'
       req._auth.should.equal false
 
     it 'should support getting the ticker', ->
       client.getTicker()
       req = client.auth.lastRequest
       req.method.should.equal 'GET'
-      req.url.should.equal 'https://www-sandbox.buttercoin.com/v1/ticker'
+      req.url.should.equal 'https://sandbox.buttercoin.com/v1/ticker'
       req._auth.should.equal false
 
     it 'should support getting account balances', ->
       client.getBalances()
       req = client.auth.lastRequest
       req.method.should.equal 'GET'
-      req.url.should.equal 'https://www-sandbox.buttercoin.com/v1/account/balances'
+      req.url.should.equal 'https://sandbox.buttercoin.com/v1/account/balances'
       req._auth.should.equal true
 
 
@@ -64,7 +68,7 @@ describe 'Buttercoin client', ->
       client.postOrder(Order::marketBid(100))
       req = client.auth.lastRequest
       req.method.should.equal 'POST'
-      req.url.should.equal 'https://www-sandbox.buttercoin.com/v1/orders'
+      req.url.should.equal 'https://sandbox.buttercoin.com/v1/orders'
       req._auth.should.equal true
       JSON.stringify(req.body).should.equal '{"instrument":"USD_BTC","side":"sell","orderType":"market","quantity":100}'
 

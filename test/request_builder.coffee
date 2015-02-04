@@ -20,7 +20,7 @@ describe 'RequestBuilder', ->
     it 'should be able to build a request based on endpoint', ->
       req = builder.buildRequest('GET', 'some/api/path')
       req.method.should.equal 'GET'
-      req.url.should.equal 'https://www-sandbox.buttercoin.com/v1/some/api/path'
+      req.url.should.equal 'https://sandbox.buttercoin.com/v1/some/api/path'
       req.strictSSL.should.equal true
 
       localEndpoint = new Endpoint(protocol: 'http', port: 9003, host: 'localhost')
