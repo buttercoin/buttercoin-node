@@ -3,24 +3,30 @@ RequestBuilder = require('./request_builder')
 CreateOrder = require ('./requests/create_order')
 request = require('request')
 merge = require('merge')
+Q = require('q')
 
 UNEXPECTED_RESPONSE = 'Unexpected response format. You might be using the wrong version of the API, or this API Client is out of date.'
 
-class CallbackHandler
+CallbackHandler = {
   do: (req, opts) =>
-    error = opts.error
-    delete(opts.error)
-    success = opts.success
-    delete(opts.success)
-
     request req, (err, res, body) ->
       if (err)
-        error?(err)
+        opts.error?(err)
       else
-        success?(res, body)
+        opts.success?(res, body)
+}
 
+PromiseHandler = {
+  do: (req, opts) =>
+    deferred = Q.defer()
+    callbacks =
+      error: (err) -> deferred.reject(err)
+      success: (res, body) -> deferred.resolve({result: res, body: body})
+    opts = merge(true, opts, callbacks)
+    CallbackHandler.do(req, opts)
 
-
+    return deferred.promise
+}
 
 class Buttercoin
   constructor: (@builder, @auth, @handler) ->
@@ -47,7 +53,10 @@ Buttercoin::withOAuth2 = (tokenProvider, endpoint, version) ->
   new Buttercoin(
     new RequestBuilder(endpoint, version),
     new OAuth2Authorizer(tokenProvider),
-    new CallbackHandler()
+    PromiseHandler
   )
+
+Buttercoin::PromiseHandler = PromiseHandler
+Buttercoin::CallbackHandler = CallbackHandler
 
 module.exports = Buttercoin

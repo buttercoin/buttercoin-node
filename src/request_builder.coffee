@@ -15,6 +15,8 @@ module.exports = class RequestBuilder
       strictSSL: (@endpoint.protocol is 'https')
       _auth: if options?.auth isnt undefined then options.auth else true
 
-    req.body = options.body if options?.body isnt undefined
+    if method is 'GET'
+      req.qs = options?.qs || options?.query || options?.body
+    req.body = options?.body
 
     return req

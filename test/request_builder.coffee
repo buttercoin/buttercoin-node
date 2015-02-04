@@ -35,3 +35,9 @@ describe 'RequestBuilder', ->
       req = builder.buildRequest('GET', 'some/api/path', auth: false)
       req._auth.should.equal false
 
+    it 'should create a querystring for get requests', ->
+      query = {foo: 'bar', x: 2}
+      builder.buildRequest('GET', '', qs: query).qs.should.equal query
+      builder.buildRequest('GET', '', query: query).qs.should.equal query
+      builder.buildRequest('GET', '', body: query).qs.should.equal query
+

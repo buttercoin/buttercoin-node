@@ -1,6 +1,3 @@
-request = require('request')
-merge = require('merge')
-
 class OAuth2Authorizer
   constructor: (@tokenProvider) ->
 
