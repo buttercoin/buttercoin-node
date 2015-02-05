@@ -61,7 +61,7 @@ var client = Buttercoin.withOAuth2(tokenProvider);
 
 #### Promises
 
-All API calls produce a [Q promise](https://github.com/kriskowal/q) by default.
+All API calls produce a [Q promise](https://github.com/kriskowal/q). We may support callback or event style interfaces if there's interest.
 
 #### Timestamps
 
@@ -80,7 +80,7 @@ var timestamp = new Date().getTime();
 // API key/secret is configured on the client instance
 
 // With explicit timestamp
-client.getBalances(timestamp: new Date().getTime());
+client.getBalances({timestamp: new Date().getTime()});
 
 // With automatic timestamp
 client.getBalances()
@@ -101,37 +101,29 @@ client.getBalances(sessionId)
 ```
 
 ### Getting Data
-*** These are out of date ***
 
-**Key Permissions**
-Returns `array` of permissions associated with this key
+**Credential Permissions**
+Returns a promise for an `array` of permissions associated with this API key or bearer token.
 
 ```javascript
-client.getKey(new Date().getTime(), function (err, key) {
-  console.log("key err", err);
-  console.log("key", key);
-});
+client.getPermissions();
 ```
 
 **Balances**
-Returns `array` of balances for this account
+Returns a promise for an `object`. Each key indicates a currency code (currently `'USD'` or `'BTC'`. Each associated value is a `number` representing the amount of that currency available.
 
 ```javascript
-client.getBalances(new Date().getTime(), function (err, balances) {
-  console.log("balances err", err);
-  console.log("balances", balances);
-});
+client.getBalances();
 ```
 
 **Deposit Address**
-Returns bitcoin address `string` to deposit your funds into the Buttercoin platform
+Returns a promise for a bitcoin address `string` which can be used to deposit bitcoins into this account.
 
 ```javascript
-client.getDepositAddress(new Date().getTime(), function (err, address) {
-  console.log("address err", err);
-  console.log("address", address);
-});
+client.getDepositAddress();
 ```
+
+*** Calls below this line are out of date ***
 
 **Get Orders**
 Returns `array` of `JSON Objects` containing information about buy and sell orders
@@ -369,12 +361,13 @@ client.cancelTransaction(trxnId, new Date().getTime(), function (err, msg) {
 
 ## Contributing
 
-This is an open source project and we love involvement from the community! Hit us up with pull requests and issues.
-
-The aim is to take your great ideas and make everyone's experience using Buttercoin even more powerful. The more contributions the better!
+This is an open source project and we love involvement from the community. Hit us up with pull requests and issues.
 
 ## Release History
 
+### 1.1.0
+- Added support for using OAuth2 credentials
+- Switched to returning promises instead of callback-passing
 ### 1.0.0
 - Added the ability to connect to a custom endpoint instead of just staging or production
 
