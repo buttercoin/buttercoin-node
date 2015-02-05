@@ -1,6 +1,6 @@
 {
   "name": "buttercoin-node",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Official Buttercoin API Node.js Client",
   "homepage": "https://github.com/buttercoin/buttercoin-node",
   "author": {

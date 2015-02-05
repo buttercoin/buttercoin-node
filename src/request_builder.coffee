@@ -1,4 +1,5 @@
 Endpoint = require('./endpoint')
+merge = require('merge')
 
 module.exports = class RequestBuilder
   @defaultVersion = 'v1'
@@ -15,6 +16,7 @@ module.exports = class RequestBuilder
       method: method
       url: @endpoint.formatUrl(pathname: "#{@version}/#{path}")
       strictSSL: (@endpoint.protocol is 'https')
+      headers: merge(true, options?.headers or {})
       _auth: if options?.auth isnt undefined then options.auth else true
 
     if method is 'GET'

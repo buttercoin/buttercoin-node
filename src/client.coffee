@@ -31,15 +31,17 @@ class Buttercoin
   constructor: (@builder, @auth, @handler) ->
 
   pipeline: (method, path, opts, userOpts) =>
-    opts = merge(opts or {}, userOpts or {})
-    req = @auth.authorize(@builder.buildRequest(method, path, opts))
+    opts = merge.recursive(true, opts or {}, userOpts or {})
+    # TODO - test for header inclusion
+    opts.headers = merge(true, @builder.endpoint.headers or {}, opts?.headers or {})
+    req = @auth.authorize(@builder.buildRequest(method, path, opts), opts)
     @handler.do(req, opts)
 
   getOrderBook: (opts) => @pipeline('GET', 'orderbook', auth: false, opts)
   getTradeHistory: (opts) => @pipeline('GET', 'trades', auth: false, opts)
   getTicker: (opts) => @pipeline('GET', 'ticker', auth: false, opts)
 
-  getBalances: () => @pipeline('GET', 'account/balances')
+  getBalances: (opts) => @pipeline('GET', 'account/balances', auth: true, opts)
 
   postOrder: (order) =>
     unless order instanceof CreateOrder
