@@ -22,9 +22,10 @@ class KeySecretAuthorizer
     signedHash = crypto.createHmac("sha256", secret).update(base64data).digest("base64")
     signedHash
 
-  authorize: (request, timestamp) =>
+  authorize: (request, opts) =>
     if request._auth
-      timestamp ?= (new Date).getTime()
+      timestamp = opts?.timestamp or (new Date).getTime()
+      ss = timestamp + @stringToSign(request)
       signature = @sign(timestamp + @stringToSign(request), @secret)
 
       request.headers ?= {}

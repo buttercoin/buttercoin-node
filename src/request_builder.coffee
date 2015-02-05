@@ -20,7 +20,9 @@ module.exports = class RequestBuilder
       _auth: if options?.auth isnt undefined then options.auth else true
 
     if method is 'GET'
-      req.qs = options?.qs || options?.query || options?.body
-    req.body = options?.body
+      querystring = options?.qs || options?.query || options?.body
+      req.qs = querystring if querystring isnt undefined
+    else if method is 'POST'
+      req.body = options.body if options?.body isnt undefined
 
     return req

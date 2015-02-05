@@ -62,7 +62,7 @@ describe 'Buttercoin key/secret authorizer', ->
         'https://sandbox.buttercoin.com/v1/orders{"foo":"bar","x":3}')
 
   describe 'authenticated requests', ->
-    it 'should add signing headers to an authenticated requests', ->
+    it 'should add signing headers to an authenticated request', ->
       timestamp = 1423078156750
       req =
         method: 'GET'
@@ -70,7 +70,7 @@ describe 'Buttercoin key/secret authorizer', ->
         _auth: true
       expected = auth.sign(timestamp + req.url, s)
 
-      req = auth.authorize(req, timestamp)
+      req = auth.authorize(req, timestamp: timestamp)
       req.headers['X-Buttercoin-Access-Key'].should.equal k
       req.headers['X-Buttercoin-Signature'].should.equal expected
       req.headers['X-Buttercoin-Date'].should.equal timestamp
