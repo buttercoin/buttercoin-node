@@ -123,10 +123,8 @@ Returns a promise for a bitcoin address `string` which can be used to deposit bi
 client.getDepositAddress();
 ```
 
-*** Calls below this line are out of date ***
-
 **Get Orders**
-Returns `array` of `JSON Objects` containing information about buy and sell orders
+Returns `array` of `object`s containing information about buy and sell orders
 
 Name | Param | Description
 --- | --- | ---
@@ -140,30 +138,19 @@ Date Max | `dateMax` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`
 // query for multiple orders
 var orderParams = { side: 'sell' };
 // the query parameter is optional and can be omitted for convenience to search all orders
-client.getOrders(orderParams, new Date().getTime(), function (err, orders) {
-  console.log("orders err", err);
-  console.log("orders", orders);
-});
+client.getOrders(orderParams);
 
 // single order by id
 var orderId = '<order_id>';
-
-client.getOrderById(orderId, new Date().getTime(), function (err, order) {
-  console.log("order err", err);
-  console.log("single order", order);
-});
+client.getOrderById(orderId);
 
 // single order by url
 var url = '<url>';
-
-client.getOrderByUrl(url, new Date().getTime(), function (err, order) {
-  console.log("order err", err);
-  console.log("single order", order);
-});
+client.getOrderByUrl(url);
 ```
 
 **Get Transactions**
-Returns `array` of `JSON Objects` containing information about deposit and withdraw action
+Returns `array` of `object`s containing information about deposits and withdrawals.
 
 Name | Param | Description
 --- | --- | ---
@@ -174,29 +161,20 @@ Date Max | `dateMax` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`
 
 ```javascript
 // query for multiple transactions
-var trxnParams = {};
+var txParams = {};
 // the query parameter is optional and can be omitted for convenience to search all trxns
-client.getTransactions(trxnParams, new Date().getTime(), function (err, orders) {
-  console.log("trxn err", err);
-  console.log("trxn", orders);
-});
+client.getTransactions(txParams);
 
 // single transaction by id
-var trxnId = '53a22ce164f23e7301a4fee5';
-
-client.getTransaction(trxnId, new Date().getTime(), function (err, transaction) {
-  console.log("single trxn err", err);
-  console.log("single trxn", transaction);
-});
+var txId = '53a22ce164f23e7301a4fee5';
+client.getTransaction(txId);
 
 // single transaction by url
 var url = 'https://api.buttercoin.com/v1/transactions/53e539aa64f23ec123931c11';
-
-client.getTransaction(url, new Date().getTime(), function (err, transaction) {
-  console.log("single trxn err", err);
-  console.log("single trxn", transaction);
-});
+client.getTransaction(url);
 ```
+
+*** Calls below this line are out of date ***
 
 ###### Unauthenticated Requests
 
