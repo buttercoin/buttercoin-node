@@ -22,17 +22,17 @@ describe 'Buttercoin OAuth2 authorizer', ->
     builder = new RequestBuilder()
 
     it 'should add a bearer header to an authenticated request', ->
-      auth = new OAuth2Authorizer(testTokenProvider)
-      req = auth.authorize({_auth: true}, 'test-user-id')
+      auth = new OAuth2Authorizer(testTokenProvider, 'test-user-id')
+      req = auth.authorize(_auth: true)
       req.headers.Authorization.should.equal 'Bearer test-bearer-token'
 
     it 'should throw an error if no bearer token is available', ->
-      auth = new OAuth2Authorizer(testTokenProvider)
-      (-> auth.authorize({_auth: true}, 'fake-user-id')).should.throw("No credentials for evidence: fake-user-id")
+      auth = new OAuth2Authorizer(testTokenProvider, 'fake-user-id')
+      (-> auth.authorize(_auth: true)).should.throw("No credentials for evidence: fake-user-id")
 
     it 'should not add a bearer header to an unauthenticated request', ->
-      auth = new OAuth2Authorizer(testTokenProvider)
-      req = auth.authorize({_auth: false}, 'test-user-id')
+      auth = new OAuth2Authorizer(testTokenProvider, 'test-user-id')
+      req = auth.authorize(_auth: false)
       should.not.exist(req.headers?.Authorization)
 
 

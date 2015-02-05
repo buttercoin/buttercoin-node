@@ -1,6 +1,7 @@
 module.exports =
   Client: require('./client')
   Endpoint: require('./endpoint')
+  CreateOrder: require('./requests/create_order')
 
 #request = require("request")
 #sign = require('./signing')

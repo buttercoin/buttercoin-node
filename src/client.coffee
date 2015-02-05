@@ -48,7 +48,12 @@ class Buttercoin
       throw new Error("Invalid argument to createOrder: #{order}")
     @pipeline('POST', 'orders', body: order)
 
-Buttercoin::withKeySecret = (api_key, api_secret, endpoint, version) ->
+class CredentialSelector
+  constructor: (@tokenProvider, @buildClient) ->
+  as: (evidence) => @buildClient(evidence)
+
+
+Buttercoin.withKeySecret = (api_key, api_secret, endpoint, version) ->
   KeySecretAuthorizer = require('./auth/keysecret')
   new Buttercoin(
     new RequestBuilder(endpoint, version),
@@ -56,15 +61,15 @@ Buttercoin::withKeySecret = (api_key, api_secret, endpoint, version) ->
     PromiseHandler
   )
 
-Buttercoin::withOAuth2 = (tokenProvider, endpoint, version) ->
+Buttercoin.withOAuth2 = (tokenProvider, endpoint, version) ->
   OAuth2Authorizer = require('./auth/oauth2')
-  new Buttercoin(
-    new RequestBuilder(endpoint, version),
-    new OAuth2Authorizer(tokenProvider),
-    PromiseHandler
-  )
+  new CredentialSelector tokenProvider, (evidence) ->
+    new Buttercoin(
+      new RequestBuilder(endpoint, version),
+      new OAuth2Authorizer(tokenProvider, evidence),
+      PromiseHandler)
 
-Buttercoin::PromiseHandler = PromiseHandler
-Buttercoin::CallbackHandler = CallbackHandler
+#Buttercoin.PromiseHandler = PromiseHandler
+#Buttercoin.CallbackHandler = CallbackHandler
 
 module.exports = Buttercoin

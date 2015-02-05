@@ -3,21 +3,21 @@ CreateOrder = require('../../lib/requests/create_order')
 describe 'CreateOrder', ->
   describe 'Helpers', ->
     it 'should have a helper for market bids', ->
-      order = CreateOrder::marketBid(100)
+      order = CreateOrder.marketBid(100)
       order.instrument.should.equal 'USD_BTC'
       order.side.should.equal 'sell'
       order.orderType.should.equal 'market'
       order.quantity.should.equal 100
 
     it 'should have a helper for market asks', ->
-      order = CreateOrder::marketAsk(100)
+      order = CreateOrder.marketAsk(100)
       order.instrument.should.equal 'BTC_USD'
       order.side.should.equal 'sell'
       order.orderType.should.equal 'market'
       order.quantity.should.equal 100
 
     it 'should have a helper for limit bids', ->
-      order = CreateOrder::limitBid(price: 100, quantity: 10)
+      order = CreateOrder.limitBid(price: 100, quantity: 10)
       order.instrument.should.equal 'BTC_USD'
       order.side.should.equal 'buy'
       order.orderType.should.equal 'limit'
@@ -25,7 +25,7 @@ describe 'CreateOrder', ->
       order.quantity.should.equal 10
 
     it 'should have a helper for limit asks', ->
-      order = CreateOrder::limitAsk(price: 200, quantity: 10)
+      order = CreateOrder.limitAsk(price: 200, quantity: 10)
       order.instrument.should.equal 'BTC_USD'
       order.side.should.equal 'sell'
       order.orderType.should.equal 'limit'

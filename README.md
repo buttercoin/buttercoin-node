@@ -174,7 +174,6 @@ var url = 'https://api.buttercoin.com/v1/transactions/53e539aa64f23ec123931c11';
 client.getTransaction(url);
 ```
 
-*** Calls below this line are out of date ***
 
 ###### Unauthenticated Requests
 
@@ -182,34 +181,26 @@ client.getTransaction(url);
 Return an `array` of current orders in the Buttercoin order book
 
 ```javascript
-client.getOrderbook(function (err, orderBook) {
-  console.log("order book err", err);
-  console.log("order book", orderBook);
-});
+client.getOrderbook();
 ```
 
 **Get Ticker**
 Return the current bid, ask, and last sell prices on the Buttercoin platform
 
 ```javascript
-client.getTicker(function (err, ticker) {
-  console.log("ticker err", err);
-  console.log("ticker", ticker);
-});
+client.getTicker();
 ```
 
 **Get Trade History**
 Return the last 100 trades
 
 ```javascript
-client.getTradeHistory(function (err, trades) {
-  console.log("trades err", err);
-  console.log("trades", trades);
-});
+client.getTradeHistory();
 ```
 
 ### Create New Actions
 
+*** Calls below this line are out of date ***
 **Create Order**
 
 Valid order params include:
@@ -224,13 +215,13 @@ Quantity | `quantity` | `string`, required `false`
 
 ```javascript
 // create a JSON object with the following params
-var order = {
+var order = new client.Order({
   instrument: "BTC_USD",
   orderAction: "buy",
   orderType: "limit",
   price: "700.00"
   quantity: "5"
-};
+});
 
 client.createOrder(order, new Date().getTime(), function (err, order) {
   console.log("create order err", err);

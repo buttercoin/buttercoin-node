@@ -12,7 +12,7 @@ class NoopAuthorizer
 class NoopHandler
   do: (request, opts) ->
 
-Buttercoin::testClient = () ->
+Buttercoin.testClient = () ->
   new Buttercoin(
     new RequestBuilder(),
     new NoopAuthorizer(),
@@ -21,8 +21,11 @@ Buttercoin::testClient = () ->
 describe 'Buttercoin client', ->
   describe 'constructor methods', ->
     it 'should construct an OAuth2 client', ->
-      testProvider = ->
-      client = Buttercoin::withOAuth2(testProvider)
+      testProvider = (name) -> 'fillmore' if name is 'millard'
+
+      clientFactory = Buttercoin.withOAuth2(testProvider)
+
+      client = clientFactory.as('millard')
       client.should.be.an.instanceOf Buttercoin
       client.auth.constructor.name.should.equal 'OAuth2Authorizer'
       client.auth.tokenProvider.should.equal testProvider
@@ -31,7 +34,7 @@ describe 'Buttercoin client', ->
     it 'should construct an API key client', ->
       k = 'abcdefghijklmnopqrstuvwxyz123456'
       s = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-      client = Buttercoin::withKeySecret(k, s)
+      client = Buttercoin.withKeySecret(k, s)
       client.should.be.an.instanceOf Buttercoin
       client.auth.constructor.name.should.equal 'KeySecretAuthorizer'
       client.auth.key.should.equal k
@@ -39,7 +42,7 @@ describe 'Buttercoin client', ->
       client.handler.do.should.be.type 'function'
 
   describe 'operations', ->
-    client = Buttercoin::testClient()
+    client = Buttercoin.testClient()
 
     it 'should support getting the order book', ->
       client.getOrderBook()
@@ -74,7 +77,7 @@ describe 'Buttercoin client', ->
       (-> client.postOrder("foo")).should.throw('Invalid argument to createOrder: foo')
 
     it 'should support posting an order', ->
-      client.postOrder(Order::marketBid(100))
+      client.postOrder(Order.marketBid(100))
       req = client.auth.lastRequest
       req.method.should.equal 'POST'
       req.url.should.equal 'https://sandbox.buttercoin.com/v1/orders'

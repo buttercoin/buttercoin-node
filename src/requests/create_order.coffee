@@ -22,7 +22,7 @@ class CreateOrder
       throw new Error("Invalid orderType: #{@orderType}")
 
 # Sell `amount` dollars for bitcoin at market price
-CreateOrder::marketBid = (amount) ->
+CreateOrder.marketBid = (amount) ->
   new CreateOrder(
     instrument: 'USD_BTC'
     side: 'sell'
@@ -30,7 +30,7 @@ CreateOrder::marketBid = (amount) ->
     quantity: amount)
 
 # Sell `quantity` bitcoins at market price
-CreateOrder::marketAsk = (quantity) ->
+CreateOrder.marketAsk = (quantity) ->
   new CreateOrder(
     instrument: 'BTC_USD'
     side: 'sell'
@@ -38,7 +38,7 @@ CreateOrder::marketAsk = (quantity) ->
     quantity: quantity)
 
 # Buy bitcoins at a specific price
-CreateOrder::limitBid = (opts) ->
+CreateOrder.limitBid = (opts) ->
   {price: p, quantity: q} = opts
   new CreateOrder(
     instrument: 'BTC_USD'
@@ -48,7 +48,7 @@ CreateOrder::limitBid = (opts) ->
     quantity: q)
 
 # Sell bitcoins at a specific price
-CreateOrder::limitAsk = (opts) ->
+CreateOrder.limitAsk = (opts) ->
   {price: p, quantity: q} = opts
   new CreateOrder(
     instrument: 'BTC_USD'
