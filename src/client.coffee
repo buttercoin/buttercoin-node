@@ -8,9 +8,6 @@ UNEXPECTED_RESPONSE = 'Unexpected response format. You might be using the wrong 
 
 CallbackHandler = {
   do: (req, opts) =>
-    console.log 'request:', req
-    console.log 'opts:', opts
-
     request req, (err, res, body) ->
       if (err)
         opts.error?(err)
