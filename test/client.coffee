@@ -3,6 +3,7 @@ should = require('should')
 Buttercoin = require('../lib/client')
 RequestBuilder = require('../lib/request_builder')
 Order = require('../lib/requests/create_order')
+Q = require('q')
 
 class NoopAuthorizer
   authorize: (request) ->
@@ -10,7 +11,8 @@ class NoopAuthorizer
     request
 
 class NoopHandler
-  do: (request, opts) ->
+  do: (request, opts) =>
+    Q(@mockResponse)
 
 Buttercoin.testClient = () ->
   new Buttercoin(
@@ -76,11 +78,21 @@ describe 'Buttercoin client', ->
     it 'should reject bad arguments when posting an order', ->
       (-> client.postOrder("foo")).should.throw('Invalid argument to createOrder: foo')
 
-    it 'should support posting an order', ->
-      client.postOrder(Order.marketBid(100))
+    it 'should support posting an order', (done) ->
+      client.handler.mockResponse =
+        result:
+          statusCode: 202
+          headers: {location: 'https://sandbox.buttercoin.com/v1/orders/testOrderId' }
+
+      res = client.postOrder(Order.marketBid(100))
       req = client.auth.lastRequest
       req.method.should.equal 'POST'
       req.url.should.equal 'https://sandbox.buttercoin.com/v1/orders'
       req._auth.should.equal true
       JSON.stringify(req.body).should.equal '{"instrument":"USD_BTC","side":"sell","orderType":"market","quantity":100}'
 
+      res.then (orderInfo) ->
+        orderInfo.url.should.equal 'https://sandbox.buttercoin.com/v1/orders/testOrderId'
+        orderInfo.orderId.should.equal 'testOrderId'
+        done()
+      .done

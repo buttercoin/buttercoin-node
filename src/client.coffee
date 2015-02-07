@@ -8,6 +8,9 @@ UNEXPECTED_RESPONSE = 'Unexpected response format. You might be using the wrong 
 
 CallbackHandler = {
   do: (req, opts) =>
+    console.log 'request:', req
+    console.log 'opts:', opts
+
     request req, (err, res, body) ->
       if (err)
         opts.error?(err)
@@ -46,7 +49,15 @@ class Buttercoin
   postOrder: (order) =>
     unless order instanceof CreateOrder
       throw new Error("Invalid argument to createOrder: #{order}")
-    @pipeline('POST', 'orders', body: order)
+    @pipeline('POST', 'orders', body: order).then (res) ->
+      if res.result.statusCode is 202
+        loc = res.result.headers.location
+        {url: loc, orderId: loc.split('/').pop()}
+      else
+        res
+
+  cancelOrder: (orderId, opts) =>
+    @pipeline('DELETE', "orders/#{orderId}", auth: true, opts)
 
 class CredentialSelector
   constructor: (@tokenProvider, @buildClient) ->

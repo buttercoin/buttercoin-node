@@ -24,5 +24,6 @@ module.exports = class RequestBuilder
       req.qs = querystring if querystring isnt undefined
     else if method is 'POST'
       req.body = options.body if options?.body isnt undefined
+      req.json = true
 
     return req
