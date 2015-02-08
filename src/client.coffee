@@ -48,7 +48,8 @@ class Buttercoin
   getTradeHistory: (opts) => @simplePipeline('GET', 'trades', auth: false, opts)
   getTicker: (opts) => @simplePipeline('GET', 'ticker', auth: false, opts)
 
-  getBalances: (opts) => @pipeline('GET', 'account/balances', auth: true, opts)
+  getBalances: (opts) => @simplePipeline('GET', 'account/balances', auth: true, opts)
+  getDepositAddress: (opts) => @simplePipeline('GET', 'account/depositAddress', auth: true, opts)
 
   postOrder: (order) =>
     unless order instanceof CreateOrder
@@ -64,9 +65,11 @@ class Buttercoin
     @pipeline('GET', 'orders', query: query).then (res) ->
       if res.result.statusCode is 200
         JSON.parse(res.result.body).results
-        #res.toJSON
       else
         res
+
+  getOrderById:(orderId, opts) =>
+    @simplePipeline('GET', "/orders/#{orderId}", auth: true, opts)
 
   cancelOrder: (orderId, opts) =>
     @pipeline('DELETE', "orders/#{orderId}", auth: true, opts).then (res) ->
