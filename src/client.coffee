@@ -44,7 +44,13 @@ class Buttercoin
       else
         res
 
-  getTradeHistory: (opts) => @pipeline('GET', 'trades', auth: false, opts)
+  getTradeHistory: (opts) =>
+    @pipeline('GET', 'trades', auth: false, opts).then (res) ->
+      if res.result.statusCode is 200
+        JSON.parse(res.result.body)
+      else
+        res
+
   getTicker: (opts) => @pipeline('GET', 'ticker', auth: false, opts)
 
   getBalances: (opts) => @pipeline('GET', 'account/balances', auth: true, opts)
