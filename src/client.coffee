@@ -53,8 +53,20 @@ class Buttercoin
       else
         res
 
+  getOrders: (query) =>
+    @pipeline('GET', 'orders', query: query).then (res) ->
+      if res.result.statusCode is 200
+        JSON.parse(res.result.body).results
+        #res.toJSON
+      else
+        res
+
   cancelOrder: (orderId, opts) =>
-    @pipeline('DELETE', "orders/#{orderId}", auth: true, opts)
+    @pipeline('DELETE', "orders/#{orderId}", auth: true, opts).then (res) ->
+      if res.result.statusCode is 204
+        'OK'
+      else
+        res
 
 class CredentialSelector
   constructor: (@tokenProvider, @buildClient) ->

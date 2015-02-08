@@ -78,21 +78,65 @@ describe 'Buttercoin client', ->
     it 'should reject bad arguments when posting an order', ->
       (-> client.postOrder("foo")).should.throw('Invalid argument to createOrder: foo')
 
-    it 'should support posting an order', (done) ->
-      client.handler.mockResponse =
-        result:
-          statusCode: 202
-          headers: {location: 'https://sandbox.buttercoin.com/v1/orders/testOrderId' }
+    describe 'Orders', ->
+      it 'should support posting an order', (done) ->
+        client.handler.mockResponse =
+          result:
+            statusCode: 202
+            headers: {location: 'https://sandbox.buttercoin.com/v1/orders/testOrderId' }
 
-      res = client.postOrder(Order.marketBid(100))
-      req = client.auth.lastRequest
-      req.method.should.equal 'POST'
-      req.url.should.equal 'https://sandbox.buttercoin.com/v1/orders'
-      req._auth.should.equal true
-      JSON.stringify(req.body).should.equal '{"instrument":"USD_BTC","side":"sell","orderType":"market","quantity":100}'
+        res = client.postOrder(Order.marketBid(100))
+        req = client.auth.lastRequest
+        req.method.should.equal 'POST'
+        req.url.should.equal 'https://sandbox.buttercoin.com/v1/orders'
+        req._auth.should.equal true
+        JSON.stringify(req.body).should.equal '{"instrument":"USD_BTC","side":"sell","orderType":"market","quantity":100}'
 
-      res.then (orderInfo) ->
-        orderInfo.url.should.equal 'https://sandbox.buttercoin.com/v1/orders/testOrderId'
-        orderInfo.orderId.should.equal 'testOrderId'
-        done()
-      .done
+        res.then (orderInfo) ->
+          orderInfo.url.should.equal 'https://sandbox.buttercoin.com/v1/orders/testOrderId'
+          orderInfo.orderId.should.equal 'testOrderId'
+          done()
+        .done
+
+      it 'should be able to query orders', (done) ->
+        client.handler.mockResponse =
+          result:
+            statusCode: 200
+            body: JSON.stringify(
+              results: [{
+                side: 'buy', quantity: 1, priceCurrency: 'USD', price: 10,
+                orderId: 'b1b520ba-caf1-4e54-a914-e8fb0ed6e6e3',
+                quantityCurrency: 'BTC', status: 'opened', orderType: 'limit',
+                events: [
+                  {eventType: 'opened', eventDate: '2015-02-07T07:32:55.025Z', quantity: 1},
+                  {eventType: 'created', eventDate: '2015-02-07T07:32:55.021Z'}
+                ]}])
+
+        res = client.getOrders({})
+        req = client.auth.lastRequest
+        req.method.should.equal 'GET'
+        req.url.should.equal 'https://sandbox.buttercoin.com/v1/orders'
+        req._auth.should.equal true
+
+        res.then (results) ->
+          should.not.exist(results.statusCode)
+          results.length.should.equal 1
+          done()
+
+      it 'should be able to cancel an order', (done) ->
+        client.handler.mockResponse =
+          result:
+            statusCode: 204
+            body: ''
+
+        res = client.cancelOrder('test-order-id')
+        req = client.auth.lastRequest
+        req.method.should.equal 'DELETE'
+        req.url.should.equal 'https://sandbox.buttercoin.com/v1/orders/test-order-id'
+        req._auth.should.equal true
+
+        res.then (result) ->
+          should.exist(result)
+          result.should.equal "OK"
+          done()
+
