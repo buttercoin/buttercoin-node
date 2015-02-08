@@ -37,7 +37,13 @@ class Buttercoin
     req = @auth.authorize(@builder.buildRequest(method, path, opts), opts)
     @handler.do(req, opts)
 
-  getOrderBook: (opts) => @pipeline('GET', 'orderbook', auth: false, opts)
+  getOrderBook: (opts) =>
+    @pipeline('GET', 'orderbook', auth: false, opts).then (res) ->
+      if res.result.statusCode is 200
+        JSON.parse(res.result.body)
+      else
+        res
+
   getTradeHistory: (opts) => @pipeline('GET', 'trades', auth: false, opts)
   getTicker: (opts) => @pipeline('GET', 'ticker', auth: false, opts)
 
