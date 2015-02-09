@@ -44,17 +44,17 @@ class Buttercoin
       else
         res
 
-  getOrderBook: (opts) => @simplePipeline('GET', 'orderbook', auth: false, opts)
-  getTradeHistory: (opts) => @simplePipeline('GET', 'trades', auth: false, opts)
-  getTicker: (opts) => @simplePipeline('GET', 'ticker', auth: false, opts)
+  getOrderBook: (opts) => @simplePipeline('GET', '/orderbook', auth: false, opts)
+  getTradeHistory: (opts) => @simplePipeline('GET', '/trades', auth: false, opts)
+  getTicker: (opts) => @simplePipeline('GET', '/ticker', auth: false, opts)
 
-  getBalances: (opts) => @simplePipeline('GET', 'account/balances', auth: true, opts)
-  getDepositAddress: (opts) => @simplePipeline('GET', 'account/depositAddress', auth: true, opts)
+  getBalances: (opts) => @simplePipeline('GET', '/account/balances', auth: true, opts)
+  getDepositAddress: (opts) => @simplePipeline('GET', '/account/depositAddress', auth: true, opts)
 
   postOrder: (order) =>
     unless order instanceof CreateOrder
       throw new Error("Invalid argument to createOrder: #{order}")
-    @pipeline('POST', 'orders', body: order).then (res) ->
+    @pipeline('POST', '/orders', body: order).then (res) ->
       if res.result.statusCode is 202
         loc = res.result.headers.location
         {url: loc, orderId: loc.split('/').pop()}
@@ -62,21 +62,28 @@ class Buttercoin
         res
 
   getOrders: (query) =>
-    @pipeline('GET', 'orders', query: query).then (res) ->
+    @pipeline('GET', '/orders', query: query).then (res) ->
       if res.result.statusCode is 200
         JSON.parse(res.result.body).results
       else
         res
 
-  getOrderById:(orderId, opts) =>
+  getOrderById: (orderId, opts) =>
     @simplePipeline('GET', "/orders/#{orderId}", auth: true, opts)
 
   cancelOrder: (orderId, opts) =>
-    @pipeline('DELETE', "orders/#{orderId}", auth: true, opts).then (res) ->
+    @pipeline('DELETE', "/orders/#{orderId}", auth: true, opts).then (res) ->
       if res.result.statusCode is 204
         'OK'
       else
         res
+
+  getTransactions: (query, opts) =>
+    @simplePipeline('GET', '/transactions', auth: true, opts).then (res) ->
+      res.results
+
+  getTransactionById: (transactionId, opts) =>
+    @simplePipeline('GET', "/transactions/#{transactionId}", auth: true, opts)
 
 class CredentialSelector
   constructor: (@tokenProvider, @buildClient) ->
