@@ -11,7 +11,7 @@ var environments = {
   staging: { host: "sandbox.buttercoin.com" }
 };
 
-module.exports = function (api_key, api_secret, mode, version) {
+function initWithApiCredentials(api_key, api_secret, mode, version) {
   if (!api_key || api_key.length !== 32)
     throw new Error('API Key parameter must be specified and be of length 32 characters');
 
@@ -33,7 +33,13 @@ module.exports = function (api_key, api_secret, mode, version) {
   }
 
   return new Buttercoin(api_key, api_secret, api_url, headers, version);
-};
+}
+
+function initWithOAuth(client_id, client_secret) {
+}
+
+module.exports.withApiKey = initWithApiCredentials;
+module.exports.withOAuth = initWithOAuth;
 
 function Buttercoin (api_key, api_secret, api_url, headers, version) {
   this.apiKey = api_key;

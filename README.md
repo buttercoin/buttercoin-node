@@ -15,181 +15,192 @@ npm install buttercoin-node
 
 ### Initialization
 
+For authenticated requests, the API client must use either a key/secret pair or an OAuth2 bearer token.
+
+#### Common
+
 Setting | Property Name | Description
 --- | --- | ---
-Public Key | `publicKey` | Your Buttercoin API Public Key
-Secret Key | `secretKey` | Your Buttercoin API Secret Key
 Environment | `environment` | Your development environment (default: `'production'`, set to `'sandbox'` to test with testnet bitcoins). You can set this to an object with `host`, `protocol` (defaults to `'https'`), `port` (defaults to empty), and `headers` (defaults to `[]`) for custom endpoints.
 API Version | `version` | The API Version.  Currently used to version the API URL and Service Description
 
+#### Key/Secret
+
+Setting | Property Name | Description
+--- | --- | ---
+Key | `key` | Your Buttercoin API Key
+Secret | `secret` | Your Buttercoin API Secret
+
 ```javascript
-// Configure Buttercoin instance.  Only apiKey and apiSecret are required.
-
-// The environment parameter defaults to the 'production' environment.
-
+// Configure Buttercoin client instance.  Only apiKey and apiSecret are required.
+// The environment parameter defaults to the sandbox environment.
 // The version parameter defaults to the latest version as of this release, 'v1'
 
-var client = require('buttercoinsdk-node')('<api_key>', '<api_secret>', '<environment>', '<version>');
+var Buttercoin = require('buttercoin-node');
+var API_KEY = // the Key ...
+var API_SECRET = // the Secret ...
+var env = Buttercoin.Environment.production;
+var client = Buttercoin.withKeySecret(API_KEY, API_SECRET, environment, 'v1');
 ```
 
-**Tips**
+#### OAuth2
 
-A note on the `timestamp` param sent to all client methods:
-This param must always be increasing, and within 5 minutes of Buttercoin server times (GMT). This is to prevent replay attacks on your data.
+Setting | Property Name | Description
+--- | --- | ---
+Token Provider | `tokenProvider` | A function which take some credential evidence (e.g. a user session id) and maps it to a bearer token string
+
+```javascript
+// Only tokenProvider is required, environment and version default as above
+
+var Buttercoin = require('buttercoin-node');
+function tokenProvider(evidence) { /* lookup bearer tokens... */ }
+var client = Buttercoin.withOAuth2(tokenProvider);
+```
+
+### Conventions
+
+#### Promises
+
+All API calls produce a [Q promise](https://github.com/kriskowal/q). We may support callback or event style interfaces if there's interest.
+
+#### Timestamps
+
+For the `timestamp` option sent to all key/secret client methods:
+This option must always be increasing, and within 5 minutes of Buttercoin server times (GMT). This is to prevent replay attacks on your data.
 
 Because of this, if you need your API calls to run in a certain order, you must chain together callbacks to ensure synchronous responses to your requests.
 
-```
+```javascript
 var timestamp = new Date().getTime();
 ```
 
-*Additionally, for convenience, if you don't include the timestamp parameter, it will default to the current timestamp.*
-
-```
-client.getKey(function (err, key) {
-  // do something amazing!
-});
-```
-
-### Get Data
-
-**Key Permissions**  
-Returns `array` of permissions associated with this key
+*Additionally, for convenience, if you don't include the timestamp option, it will default to the current time.*
 
 ```javascript
-client.getKey(new Date().getTime(), function (err, key) {
-  console.log("key err", err);
-  console.log("key", key);
-});
+// API key/secret is configured on the client instance
+
+// With explicit timestamp
+client.getBalances({timestamp: new Date().getTime()});
+
+// With automatic timestamp
+client.getBalances()
+  .then(/* do something ... */)
+  .done();
 ```
 
-**Balances**  
-Returns `array` of balances for this account
+#### Evidence
+When using an OAuth2 client, you need to provide 'evidence' that can be used to derive a bearer token for a specific user.
+
+Unlike in the case of timestamps, this must be passed to any method requiring authentication.
 
 ```javascript
-client.getBalances(new Date().getTime(), function (err, balances) {
-  console.log("balances err", err);
-  console.log("balances", balances);
-});
+var sessionId = // a user session ID which can be used to lookup a bearer token
+client.getBalances(sessionId)
+  .then(/* do something ... */)
+  .done();
 ```
 
-**Deposit Address**  
-Returns bitcoin address `string` to deposit your funds into the Buttercoin platform
+### Getting Data
+
+**Credential Permissions**
+Returns a promise for an `array` of permissions associated with this API key or bearer token.
 
 ```javascript
-client.getDepositAddress(new Date().getTime(), function (err, address) {
-  console.log("address err", err);
-  console.log("address", address);
-});
+client.getPermissions();
 ```
 
-**Get Orders**  
-Returns `array` of `JSON Objects` containing information about buy and sell orders
+**Balances**
+Returns a promise for an `object`. Each key indicates a currency code (currently `'USD'` or `'BTC'`. Each associated value is a `number` representing the amount of that currency available.
+
+```javascript
+client.getBalances();
+```
+
+**Deposit Address**
+Returns a promise for a bitcoin address `string` which can be used to deposit bitcoins into this account.
+
+```javascript
+client.getDepositAddress();
+```
+
+**Get Orders**
+Returns `array` of `object`s containing information about buy and sell orders
 
 Name | Param | Description
 --- | --- | ---
-Status | `status` | enum: `['opened', 'partial-filled', 'filled', 'canceled']`  
-Side | `side` | enum: `['buy', 'sell']`  
-Order Type | `orderType` | enum: `['market', 'limit']`  
-Date Min | `dateMin` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
-Date Max | `dateMax` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
+Status | `status` | enum: `['opened', 'partial-filled', 'filled', 'canceled']`
+Side | `side` | enum: `['buy', 'sell']`
+Order Type | `orderType` | enum: `['market', 'limit']`
+Date Min | `dateMin` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`
+Date Max | `dateMax` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`
 
 ```javascript
 // query for multiple orders
 var orderParams = { side: 'sell' };
 // the query parameter is optional and can be omitted for convenience to search all orders
-client.getOrders(orderParams, new Date().getTime(), function (err, orders) {
-  console.log("orders err", err);
-  console.log("orders", orders);
-});
+client.getOrders(orderParams);
 
 // single order by id
 var orderId = '<order_id>';
-
-client.getOrderById(orderId, new Date().getTime(), function (err, order) {
-  console.log("order err", err);
-  console.log("single order", order);
-});
+client.getOrderById(orderId);
 
 // single order by url
 var url = '<url>';
-
-client.getOrderByUrl(url, new Date().getTime(), function (err, order) {
-  console.log("order err", err);
-  console.log("single order", order);
-});
+client.getOrderByUrl(url);
 ```
 
-**Get Transactions**  
-Returns `array` of `JSON Objects` containing information about deposit and withdraw action
+**Get Transactions**
+Returns `array` of `object`s containing information about deposits and withdrawals.
 
 Name | Param | Description
 --- | --- | ---
-Status | `status` | enum: `['pending', 'processing', 'funded', 'canceled', 'failed']`  
-Transaction Type | `transactionType` | enum: `['deposit', 'withdrawal']`  
-Date Min | `dateMin` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
-Date Max | `dateMax` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`  
+Status | `status` | enum: `['pending', 'processing', 'funded', 'canceled', 'failed']`
+Transaction Type | `transactionType` | enum: `['deposit', 'withdrawal']`
+Date Min | `dateMin` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`
+Date Max | `dateMax` | format: ISO-8601, e.g. `'2014-05-06T13:15:30Z'`
 
 ```javascript
 // query for multiple transactions
-var trxnParams = {};
+var txParams = {};
 // the query parameter is optional and can be omitted for convenience to search all trxns
-client.getTransactions(trxnParams, new Date().getTime(), function (err, orders) {
-  console.log("trxn err", err);
-  console.log("trxn", orders);
-});
+client.getTransactions(txParams);
 
 // single transaction by id
-var trxnId = '53a22ce164f23e7301a4fee5';
-
-client.getTransaction(trxnId, new Date().getTime(), function (err, transaction) {
-  console.log("single trxn err", err);
-  console.log("single trxn", transaction);
-});
+var txId = '53a22ce164f23e7301a4fee5';
+client.getTransaction(txId);
 
 // single transaction by url
 var url = 'https://api.buttercoin.com/v1/transactions/53e539aa64f23ec123931c11';
-
-client.getTransaction(url, new Date().getTime(), function (err, transaction) {
-  console.log("single trxn err", err);
-  console.log("single trxn", transaction);
-});
+client.getTransaction(url);
 ```
+
 
 ###### Unauthenticated Requests
 
-**Get Order Book**  
+**Get Order Book**
 Return an `array` of current orders in the Buttercoin order book
 
 ```javascript
-client.getOrderbook(function (err, orderBook) {
-  console.log("order book err", err);
-  console.log("order book", orderBook);
-});
+client.getOrderbook();
 ```
 
-**Get Ticker**  
+**Get Ticker**
 Return the current bid, ask, and last sell prices on the Buttercoin platform
 
 ```javascript
-client.getTicker(function (err, ticker) {
-  console.log("ticker err", err);
-  console.log("ticker", ticker);
-});
+client.getTicker();
 ```
 
-**Get Trade History**  
+**Get Trade History**
 Return the last 100 trades
 
 ```javascript
-client.getTradeHistory(function (err, trades) {
-  console.log("trades err", err);
-  console.log("trades", trades);
-});
+client.getTradeHistory();
 ```
 
 ### Create New Actions
 
+*** Calls below this line are out of date ***
 **Create Order**
 
 Valid order params include:
@@ -197,20 +208,20 @@ Valid order params include:
 Name | Param | Description
 --- | --- | ---
 Instrument | `instrument` | enum: `['BTC_USD, USD_BTC']`
-Side | `side` | enum: `['buy', 'sell']`, required `true`  
-Order Type | `orderType` | enum: `['limit', 'market']`, required `true`  
-Price | `price` | `string`, required `false`  
+Side | `side` | enum: `['buy', 'sell']`, required `true`
+Order Type | `orderType` | enum: `['limit', 'market']`, required `true`
+Price | `price` | `string`, required `false`
 Quantity | `quantity` | `string`, required `false`
 
 ```javascript
 // create a JSON object with the following params
-var order = {
+var order = new client.Order({
   instrument: "BTC_USD",
   orderAction: "buy",
   orderType: "limit",
   price: "700.00"
   quantity: "5"
-};
+});
 
 client.createOrder(order, new Date().getTime(), function (err, order) {
   console.log("create order err", err);
@@ -218,17 +229,17 @@ client.createOrder(order, new Date().getTime(), function (err, order) {
 });
 ```
 
-**Create Transaction**  
+**Create Transaction**
 
 _Please contact Buttercoin support before creating a USD deposit using the API_
 
-Deposit transaction params include:  
+Deposit transaction params include:
 
 Name | Param | Description
 --- | --- | ---
-Method | `method` | enum: `['wire']`, required `true`  
-Currency | `currency` | enum: `['USD']`, required `true`  
-Amount | `amount` | `string`, required `true`  
+Method | `method` | enum: `['wire']`, required `true`
+Currency | `currency` | enum: `['USD']`, required `true`
+Amount | `amount` | `string`, required `true`
 
 ```javascript
 // create deposit
@@ -244,12 +255,12 @@ client.createDeposit(trxnObj, new Date().getTime(), function (err, trxn) {
 });
 ```
 
-Withdrawal transaction params include:  
+Withdrawal transaction params include:
 
 Name | Param | Description
---- | --- | --- 
-Method | `method` | enum: `['check']`, required `true`  
-Currency | `currency` | enum: `['USD']`, required `true`  
+--- | --- | ---
+Method | `method` | enum: `['check']`, required `true`
+Currency | `currency` | enum: `['USD']`, required `true`
 Amount | `amount` | `string`, required `true`
 
 ```javascript
@@ -265,13 +276,13 @@ client.createWithdrawal(trxnObj, new Date().getTime(), function (err, trxn) {
   console.log("create trxn", trxn);
 });
 ```
-Send bitcoin transaction params include:  
+Send bitcoin transaction params include:
 
 Name | Param | Description
---- | --- | --- 
-Currency | `currency` | `['USD']`, required `true`  
-Amount | `amount` | `string`, required `true`  
-Destination | `destination` | address to which to send currency `string`, required `true`   
+--- | --- | ---
+Currency | `currency` | `['USD']`, required `true`
+Amount | `amount` | `string`, required `true`
+Destination | `destination` | address to which to send currency `string`, required `true`
 
 ```javascript
 // send bitcoins to an address
@@ -292,7 +303,7 @@ client.sendBitcoin(trxnObj, new Date().getTime(), function (err, trxn) {
 
 All successful cancel calls to the API return a response status of `204` with a human readable success message
 
-**Cancel Order**  
+**Cancel Order**
 Cancel a pending buy or sell order
 
 ```javascript
@@ -302,7 +313,7 @@ client.cancelOrder(orderId, new Date().getTime(), function (err, msg) {
 });
 ```
 
-**Cancel Transaction**  
+**Cancel Transaction**
 Cancel a pending deposit or withdraw action
 
 ```javascript
@@ -314,17 +325,18 @@ client.cancelTransaction(trxnId, new Date().getTime(), function (err, msg) {
 
 ## Further Reading
 
-[Buttercoin - Website](https://www.buttercoin.com)  
+[Buttercoin - Website](https://www.buttercoin.com)
 [Buttercoin API Documentation](https://developer.buttercoin.com)
 
 ## Contributing
 
-This is an open source project and we love involvement from the community! Hit us up with pull requests and issues. 
-
-The aim is to take your great ideas and make everyone's experience using Buttercoin even more powerful. The more contributions the better!
+This is an open source project and we love involvement from the community. Hit us up with pull requests and issues.
 
 ## Release History
 
+### 1.1.0
+- Added support for using OAuth2 credentials
+- Switched to returning promises instead of callback-passing
 ### 1.0.0
 - Added the ability to connect to a custom endpoint instead of just staging or production
 
